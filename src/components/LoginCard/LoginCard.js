@@ -23,7 +23,7 @@ const logincard = (props) => {
   const { classes } = props;
 
   return (
-    <div style={{width: '30%'}}>
+    <div style={{width: props.width, height:props.height}}>
       <Card className={classes.card}>
         <CardContent className={classes.cardContent}>
         {props.children}

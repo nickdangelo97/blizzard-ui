@@ -5,10 +5,8 @@ import Logo from '../../assets/blizzard.png'
 import Typography from '@material-ui/core/Typography';
 import customStyles from "../../customStyles";
 
-const LoginPage = (props) => {
-    console.log(customStyles)
+const LoginPage = () => {
     return (
-
         <div style={customStyles.pageCentered}>
             <div style={{ 'marginBottom': '20px' }}>
                 <img src={Logo} />
@@ -20,7 +18,7 @@ const LoginPage = (props) => {
                 Loyalty Program Login
             </Typography>
 
-            <LoginCard>
+            <LoginCard width="45%">
                 <Typography
                     style={{ fontSize: '36px' }}
                     gutterBottom>
@@ -30,9 +28,7 @@ const LoginPage = (props) => {
                 <LoginForm />
             </LoginCard>
         </div>
-
     );
-
 }
 
 export default LoginPage

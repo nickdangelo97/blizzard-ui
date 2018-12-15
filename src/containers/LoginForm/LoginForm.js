@@ -3,6 +3,8 @@ import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import FormTextField from '../../components/FormTextField/FormTextField';
+import { Link } from "react-router-dom";
+
 
 
 const styles = {
@@ -83,9 +85,12 @@ class LoginForm extends Component {
                     autoComplete="current-password"
                 />
 
+                
+
                 <Typography className={classes.clickHere}
                     align="center"
-                    gutterBottom>First time signing in? Click here!
+                    gutterBottom>
+                    <Link to="/createuser">First time signing in? Click here!</Link>
                 </Typography>
 
                 <Button className={classes.submitButton} type="submit">Submit</Button>
