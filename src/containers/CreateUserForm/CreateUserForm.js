@@ -6,7 +6,9 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import LoyaltyCheck from './StepperComponents/LoyaltyCheck';
+
+import FormTextField from '../../components/FormTextField/FormTextField';
+
 
 const styles = theme => ({
   root: {
@@ -22,80 +24,130 @@ const styles = theme => ({
 });
 
 function getSteps() {
-  return ['Loyalty Number', 'Confirm Information', 'Confirm email'];
+  return ['Loyalty Number', 'Email Confirmation'];
 }
-
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return (<LoyaltyCheck />)
-    case 1:
-      return 'What is an ad group anyways?';
-    case 2:
-      return 'This is the bit I really care bout!';
-    default:
-      return 'Unknown step';
-  }
-}
-
-
 
 class HorizontalLinearStepper extends React.Component {
   state = {
     activeStep: 0,
-    // skipped: new Set(),
+    emailInvalid: false,
+    loyaltyInvalid: false,
+    email: "",
+    loyalty: "",
+    buttonEnabled: false
   };
 
+  validations = {
+    email: {
+      required: true,
+      regex: /^\S+@\S+$/
+    }
+  }
+
+  styles = {
+    form: {
+      display: 'flex',
+      flexDirection: 'column',
+      height: '300px',
+    },
+    textInputs: {
+      marginTop: '10px',
+      marginBottom: '10px'
+    },
+    headerText: {
+      marginTop: '10px',
+      marginBottom: '20px',
+      fontSize: '18px'
+
+    }
+
+  }
+
+  emailChange = (event) => {
+    var re = this.validations.email.regex
+    var check = re.test(event.target.value)
+
+    console.log(check)
+
+    this.setState({
+      emailInvalid: !check,
+      email: event.target.value,
+      buttonEnabled: !check && this.state.loyaltyInvalid
+    })
+  }
+
+  loyaltyChange = (event) => {
+    this.setState({
+      loyaltyInvalid: event.target.value === "",
+      loyalty: event.target.value,
+      buttonEnabled: event.target.value === "" && this.state.emailInvalid,
+    })
+  }
+
+  loyaltyCheck() {
+    return (
+      <div style={this.styles.form}>
+        <Typography style={{ fontSize: "18px" }} gutterBottom>Please enter your loyalty number below</Typography>
+        <Typography gutterBottom>Note: Your loyalty number is also your OSA#.</Typography>
+        <FormTextField
+          id="loyalty_field"
+          className={this.styles.textInputs}
+          change={this.loyaltyChange}
+          error={this.state.loyaltyInvalid}
+          required={true}
+          type="password"
+          label="Loyalty #"
+          value={this.state.loyalty}
+          helptext="A Loyalty number is needed"
+        />
+        <Typography style={this.styles.headerText}>Please enter the email used when registering with!</Typography>
+        <FormTextField
+          id="form email"
+          className={this.styles.textInputs}
+          change={this.emailChange}
+          error={this.state.emailInvalid}
+          required={true}
+          label="Email"
+          value={this.state.email}
+          autoComplete="email"
+          helptext="A valid email is required"
+        />
+      </div>
+
+    );
+  }
+
+  emailSent() {
+    return(<Typography gutterBottom>Email sent!</Typography>)
+  }
+
+  getStepContent(step) {
+    switch (step) {
+      case 0:
+        return this.loyaltyCheck()
+      case 1:
+        return this.emailSent()
+      default:
+        return 'Unknown step';
+    }
+  }
   isStepOptional = step => {
     return step === 1;
   };
 
   handleNext = () => {
     const { activeStep } = this.state;
-    // let { skipped } = this.state;
-    // if (this.isStepSkipped(activeStep)) {
-    //   skipped = new Set(skipped.values());
-    //   skipped.delete(activeStep);
-    // }
     this.setState({
       activeStep: activeStep + 1,
-      // skipped,
     });
   };
 
-  handleBack = () => {
-    this.setState(state => ({
-      activeStep: state.activeStep - 1,
-    }));
-  };
-
-  // handleSkip = () => {
-  //   const { activeStep } = this.state;
-  //   if (!this.isStepOptional(activeStep)) {
-  //     // You probably want to guard against something like this,
-  //     // it should never occur unless someone's actively trying to break something.
-  //     throw new Error("You can't skip a step that isn't optional.");
-  //   }
-
-  //   this.setState(state => {
-  //     const skipped = new Set(state.skipped.values());
-  //     skipped.add(activeStep);
-  //     return {
-  //       activeStep: state.activeStep + 1,
-  //       skipped,
-  //     };
-  //   });
-  // };
 
   handleReset = () => {
     this.setState({
       activeStep: 0,
     });
   };
-
-  // isStepSkipped(step) {
-  //   return this.state.skipped.has(step);
-  // }
 
   render() {
     const { classes } = this.props;
@@ -108,12 +160,6 @@ class HorizontalLinearStepper extends React.Component {
           {steps.map((label, index) => {
             const props = {};
             const labelProps = {};
-            if (this.isStepOptional(index)) {
-              labelProps.optional = <Typography variant="caption">Optional</Typography>;
-            }
-            {/* if (this.isStepSkipped(index)) {
-              props.completed = false;
-            } */}
             return (
               <Step key={label} {...props}>
                 <StepLabel {...labelProps}>{label}</StepLabel>
@@ -122,47 +168,18 @@ class HorizontalLinearStepper extends React.Component {
           })}
         </Stepper>
         <div>
-          {activeStep === steps.length ? (
-            <div>
-              <Typography className={classes.instructions}>
-                All steps completed - you&apos;re finished
-              </Typography>
-              <Button onClick={this.handleReset} className={classes.button}>
-                Reset
-              </Button>
-            </div>
-          ) : (
-            <div>
-              {getStepContent(activeStep)}
-              <div>
-                <Button
-                  disabled={activeStep === 0}
-                  onClick={this.handleBack}
-                  className={classes.button}
-                >
-                  Back
-                </Button>
-                {this.isStepOptional(activeStep) && (
-                  {/* <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={this.handleSkip}
-                    className={classes.button}
-                  >
-                    Skip
-                  </Button> */}
-                )}
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={this.handleNext}
-                  className={classes.button}
-                >
-                  {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                </Button>
-              </div>
-            </div>
-          )}
+          {this.getStepContent(activeStep)}
+        </div>
+        <div>
+        <Button
+          variant="contained"
+          color="primary"
+          // disabled={!this.state.buttonEnabled}
+          onClick={this.handleNext}
+          className={classes.button}
+        >
+          Next
+        </Button>
         </div>
       </div>
     );

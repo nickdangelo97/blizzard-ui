@@ -18,6 +18,7 @@ const formtextfield = props => {
                 error={props.error}
                 type={props.type} 
                 autoComplete={props.autoComplete}
+                required={props.required}
                 />
 
             <FormHelperText

@@ -35,7 +35,7 @@ class LoginForm extends Component {
     validations = {
         email: {
             required: true,
-            regex: /[\@]/
+            regex: /^\S+@\S+$/
         },
         password: {
             required: true
@@ -54,7 +54,6 @@ class LoginForm extends Component {
 
     onSubmit = (event) => {
         event.preventDefault();
-        console.log("Submitted")
     }
 
     render() {
