@@ -1,7 +1,7 @@
 module.exports = (sequelize, type) => {
     return (sequelize.define('user', {
         loyalty: {
-            type: type.INTEGER
+            type: type.STRING
         }, 
         yob: {
             type: type.INTEGER
@@ -38,6 +38,11 @@ module.exports = (sequelize, type) => {
         },
         gender: {
             type: type.STRING
+        },
+        active: {
+            type: type.BOOLEAN,
+            allowNull: false,
+            defaultValue: false 
         }
     }))
 }
