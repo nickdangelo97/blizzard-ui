@@ -24,7 +24,7 @@ const styles = theme => ({
 });
 
 function getSteps() {
-  return ['Loyalty Number', 'Email Confirmation'];
+  return ['Loyalty Number', 'Set Password', 'Email Confirmation'];
 }
 
 class HorizontalLinearStepper extends React.Component {
@@ -32,9 +32,10 @@ class HorizontalLinearStepper extends React.Component {
     activeStep: 0,
     emailInvalid: false,
     loyaltyInvalid: false,
+    passwordInvalid: false,
     email: "",
     loyalty: "",
-    buttonEnabled: false
+    buttonEnabled: false,
   };
 
   validations = {
@@ -67,12 +68,10 @@ class HorizontalLinearStepper extends React.Component {
     var re = this.validations.email.regex
     var check = re.test(event.target.value)
 
-    console.log(check)
-
     this.setState({
       emailInvalid: !check,
       email: event.target.value,
-      buttonEnabled: !check && this.state.loyaltyInvalid
+      buttonEnabled: !check && this.state.passwordInvalid
     })
   }
 
@@ -80,8 +79,48 @@ class HorizontalLinearStepper extends React.Component {
     this.setState({
       loyaltyInvalid: event.target.value === "",
       loyalty: event.target.value,
-      buttonEnabled: event.target.value === "" && this.state.emailInvalid,
+      buttonEnabled: event.target.value === "" && this.state.emailInvalid && this.state.passwordInvalid
     })
+  }
+
+  passwordChange = (event) => {
+    this.setState({
+      passwordInvalid: event.target.value === "",
+      buttonEnabled: event.target.value === "" && this.state.emailInvalid && this.state.loyaltyInvalid
+    })
+  }
+
+  setPassword() {
+    return (
+      <div style={this.styles.form}>
+        <Typography style={{ fontSize: "18px" }} gutterBottom>Please enter a password</Typography>
+        <FormTextField
+          id="password"
+          className={this.styles.textInputs}
+          // change={this.loyaltyChange}
+          // error={this.state.loyaltyInvalid}
+          required={true}
+          type="password"
+          label="Password"
+          // value={this.state.loyalty}
+          // helptext="A Loyalty number is needed"
+        />
+        <Typography style={this.styles.headerText}>Please confirm your password</Typography>
+        <FormTextField
+          id="form email"
+          className={this.styles.textInputs}
+          // change={this.emailChange}
+          // error={this.state.emailInvalid}
+          required={true}
+          label="Confirm Password"
+          // value={this.state.email}
+          type="password"
+          autoComplete="email"
+          // helptext="A valid email is required"
+        />
+      </div>
+
+    );
   }
 
   loyaltyCheck() {
@@ -113,12 +152,11 @@ class HorizontalLinearStepper extends React.Component {
           helptext="A valid email is required"
         />
       </div>
-
-    );
+    )
   }
 
   emailSent() {
-    return(<Typography gutterBottom>Email sent!</Typography>)
+    return (<Typography gutterBottom>Email sent!</Typography>)
   }
 
   getStepContent(step) {
@@ -126,6 +164,8 @@ class HorizontalLinearStepper extends React.Component {
       case 0:
         return this.loyaltyCheck()
       case 1:
+        return this.setPassword()
+      case 2:
         return this.emailSent()
       default:
         return 'Unknown step';
@@ -171,14 +211,14 @@ class HorizontalLinearStepper extends React.Component {
           {this.getStepContent(activeStep)}
         </div>
         <div>
-        <Button
-          variant="contained"
-          color="primary"
-          // disabled={!this.state.buttonEnabled}
-          onClick={this.handleNext}
-          className={classes.button}
-        >
-          Next
+          <Button
+            variant="contained"
+            color="primary"
+            // disabled={!this.state.buttonEnabled}
+            onClick={this.handleNext}
+            className={classes.button}
+          >
+            Next
         </Button>
         </div>
       </div>
