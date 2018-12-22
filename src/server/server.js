@@ -63,8 +63,9 @@ app.post('/sendverification', (req, res) => {
         }
     }).then(user => {
         argon2.verify(user.loyalty, req.body.loyalty)
-            .then((req) => {
-                const body = { id: req.body, email: req.email }
+            .then(() => {
+                const body = { id: req.body, email: req.body.email }
+                console.log("BODY IS ", body)
                 const token = jwt.sign({ user: body }, "VERKEY", { algorithm: 'HS256' })
 
                 return res.status(200).send({
@@ -94,23 +95,21 @@ app.post('/sendverification', (req, res) => {
     })
 })
 
-app.get('/verifyEmail', passportEmailVerify.passport.authenticate('jwt', { session: false}))
+app.get('/verifyEmail', function (req, res, next) {
+    passportEmailVerify.passport.authenticate("jwt", function (err, user, info) {
+        if (err) {
+            return res.sendStatus(400).send(err)
+        }
+        if (!user) return res.sendStatus(401)
 
-// app.get('/verifyEmail', function (req, res, next) {
-//     passportEmailVerify.passport.authenticate("jwt", function (err, user, info) {
-//         if (err) {
-//             return res.sendStatus(400).send(err)
-//         }
-//         if (!user) return res.sendStatus(401)
-
-//         user.update({
-//             active: true
-//         }).then(info => res.sendStatus(200))
-//             .catch(err => res.sendStatus(400).send(err))
+        user.update({
+            active: true
+        }).then(info => res.sendStatus(200))
+            .catch(err => res.sendStatus(400).send(err))
 
 
-//     })(req, res, next);
-// });
+    })(req, res, next);
+});
 
 app.get('/login', (req, res) => {
     // if (_.isEmpty(req.body)) { 
