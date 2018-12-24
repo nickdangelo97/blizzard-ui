@@ -6,25 +6,29 @@ import FormTextField from '../../components/FormTextField/FormTextField';
 import { Link } from "react-router-dom";
 
 
-
-const styles = {
+const styles = theme => ({
     form: {
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
+        width: '100%',
     },
     textInputs: {
         'margin-top': '10px',
-        'margin-bottom': '10px'
+        'margin-bottom': '15px'
     },
     submitButton: {
         'margin-top': '10px',
+        width: "80%",
+        alignSelf: "center"
     },
     clickHere: {
-        'margin-top': '10px',
-        fontSize: '16px'
+        marginTop: '10px',
+        fontSize: '16px',
+        textDecoration: 'none',
+        color: theme.palette.secondary.main
     }
-}
+})
 
 class LoginForm extends Component {
     state = {
@@ -86,14 +90,14 @@ class LoginForm extends Component {
 
                 
 
-                <Typography className={classes.clickHere}
+                <Typography
                     align="center"
                     gutterBottom>
-                    <Link to="/createuser">First time signing in? Click here!</Link>
+                    <Link to="/createuser" className={classes.clickHere}>First time signing in? Click here!</Link>
                 </Typography>
 
-                <Button className={classes.submitButton} type="submit">Submit</Button>
-                <Button className={classes.submitButton}>Clear</Button>
+                <Button className={classes.submitButton} type="submit" variant="contained" color="primary" size= "small">Submit</Button>
+                <Button className={classes.submitButton} variant="contained" size= "small">Clear</Button>
             </form>
 
         )

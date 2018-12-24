@@ -11,12 +11,6 @@ const styles = {
   cardContent: {
     width: '80%'
   },
-  title: {
-    fontSize: 35,
-  },
-  pos: {
-    marginBottom: 12,
-  },
 };
 
 const logincard = (props) => {
@@ -24,7 +18,7 @@ const logincard = (props) => {
 
   return (
     <div style={{width: props.width, height:props.height}}>
-      <Card className={classes.card}>
+      <Card className={classes.card} raised>
         <CardContent className={classes.cardContent}>
         {props.children}
         </CardContent>  

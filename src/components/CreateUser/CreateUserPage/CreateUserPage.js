@@ -1,7 +1,7 @@
 import React from 'react'
-import customStyles from "../../customStyles";
-import LoginCard from '../LoginCard/LoginCard';
-import CreateUserForm from '../../containers/CreateUserForm/CreateUserForm';
+import customStyles from "../../../customStyles";
+import LoginCard from '../../Login/LoginCard/LoginCard';
+import CreateUserForm from '../../../containers/CreateUserForm/CreateUserForm';
 
 
 const CreateUserPage = (props) => {

@@ -1,18 +1,27 @@
+import { MuiThemeProvider } from '@material-ui/core';
 import React, { Component } from 'react';
-import LoginPage from './components/LoginPage/LoginPage';
-import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
-import CreateUserPage from './components/CreateUserPage/CreateUserPage';
+import UserPage from './components/UserPage/UserPage';
+import LoginPage from './components/Login/LoginPage/LoginPage'
+import CreateUser from './components/CreateUser/CreateUserPage/CreateUserPage'
+import Layout from './containers/Layout/Layout';
+import theme from './theme';
+
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-      <CreateUserPage />
-      {/* <LoginPage /> */}
-      {/* <Switch>
+        <MuiThemeProvider theme={theme}>
+          <Layout />
+          {/* <CreateUser /> */}
+          {/* <LoginPage /> */}
+          {/* <UserPage /> */}
+          {/* <Switch>
         <Route path="/" exact component={LoginPage} />
         <Route path="/createuser" exact component={CreateUserPage} />
       </Switch> */}
+        </MuiThemeProvider>
+
       </div>
 
 

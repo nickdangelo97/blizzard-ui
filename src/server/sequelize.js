@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
 const UserModel = require('./models/User')
 
-const sequelize = new Sequelize('blizzardcrm', 'nick', '6197', {
+const sequelize = new Sequelize('blizzardcrm', 'nick2', '6197', {
     host: '127.0.0.1',
     dialect: 'postgres',
     operatorsAliases: false,
