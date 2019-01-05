@@ -24,19 +24,20 @@ class UserProfile extends Component {
         var items = []
         for (const key in object) {
             items.push(
-                <div style={{display:"flex", flexDirection:"row"}}>
-                    <Typography variant="subheading" style={{ fontWeight: "bold",marginRight: "100px" }}>{key}:</Typography>
-                    <Typography variant="subheading" align="left">{object[key]}</Typography>
-                </div>)
-        }
+                <li style={{display:"flex", flexDirection:"row"}}>
+                <Typography variant="subheading" style={{ fontWeight: "bold", width: "150px" }}>{key}:</Typography>
+                <Typography variant="subheading">{object[key]}</Typography>
 
+                </li>
+            ) 
+        }
         return items
     }
 
 
     render() {
         return (
-            <UserCard width="65%">
+            <UserCard width="50%">
                 {/* <Typography variant="h3" gutterBottom>Player Profile</Typography> */}
                 <div style={{
                     display: "flex",
