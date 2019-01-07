@@ -24,9 +24,9 @@ class UserProfile extends Component {
         var items = []
         for (const key in object) {
             items.push(
-                <li style={{display:"flex", flexDirection:"row"}}>
-                <Typography variant="subheading" style={{ fontWeight: "bold", width: "150px" }}>{key}:</Typography>
-                <Typography variant="subheading">{object[key]}</Typography>
+                <li key={key} style={{display:"flex", flexDirection:"row"}}>
+                <Typography variant="subtitle1" style={{ fontWeight: "bold", width: "150px" }}>{key}:</Typography>
+                <Typography variant="subtitle1">{object[key]}</Typography>
 
                 </li>
             ) 
@@ -37,8 +37,7 @@ class UserProfile extends Component {
 
     render() {
         return (
-            <UserCard width="50%">
-                {/* <Typography variant="h3" gutterBottom>Player Profile</Typography> */}
+            <UserCard width="45%" height="500px">
                 <div style={{
                     display: "flex",
                     flexDirection: "row",
@@ -46,7 +45,7 @@ class UserProfile extends Component {
                     width: "100%",
                     justifyContent: "flex-start"
                 }}>
-                    <img src={Logo} style={{ marginLeft: "30px", marginTop: "30px",height:"200px" }} />
+                    <img src={Logo} style={{ marginLeft: "30px", marginTop: "30px",height:"150px" }} />
                     <div style={{ marginLeft: "100px", flexGrow: 1 }}>
                         <Typography align="left"
                             gutterBottom
@@ -62,12 +61,8 @@ class UserProfile extends Component {
                                 height: 0.1
                             }}
                         />
-                        <ul style={{ listStyle: "none", paddingLeft: 0 }}>
-                        {/* <div style={{ display: "flex", flexDirection: "column" }}> */}
-                            {/* <Typography variant="subheading" style={{fontWeight: "bold"}}>Attribute:&emsp;</Typography>
-                                <Typography variant="subheading">Attribute</Typography> */}
+                        <ul style={{ listStyle: "none", paddingLeft: 0,  height: 320 }}>
                             {this.list_items(test).map((item, i)=> item)}
-                        {/* </div> */}
                         </ul>
                     </div>
                 </div>

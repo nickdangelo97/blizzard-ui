@@ -4,27 +4,28 @@ import CardContent from '@material-ui/core/CardContent';
 import { withStyles } from '@material-ui/core/styles';
 
 
-const styles = {
-    card: {
-        display: 'flex',
-      },
-      cardContent: {
-        width: '100%'
-      },
-}
+
 
 const UserCard = (props) => {
-    const { classes } = props
-    console.log(props.width)
+
+    const styles = {
+        card: {
+            display: 'flex',
+            margin: '25px',
+            height: props.height,
+            width: props.width
+          },
+          cardContent: {
+            width: '100%'
+          },
+    }
+
     return (
-        <div style={{ width: props.width, height: props.height }}>
-            <Card className={classes.card} raised>
-                <CardContent className={classes.cardContent}>
+            <Card style={styles.card} raised>
+                <CardContent style={styles.cardContent}>
                     {props.children}
                 </CardContent>
             </Card>
-
-        </div>
     );
 }
-export default withStyles(styles)(UserCard);
+export default UserCard;
