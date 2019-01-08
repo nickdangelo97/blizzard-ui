@@ -14,7 +14,7 @@ const styles = theme => ({
         width: '100%',
     },
     textInputs: {
-        'margin-top': '10px',
+        'margin-top': '5px',
         'margin-bottom': '15px'
     },
     submitButton: {
