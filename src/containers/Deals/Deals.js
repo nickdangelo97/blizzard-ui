@@ -24,6 +24,8 @@ class Deals extends Component {
                 </ListItem>
 
             )
+
+            i++
         }
 
         return items
