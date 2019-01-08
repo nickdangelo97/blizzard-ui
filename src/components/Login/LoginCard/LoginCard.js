@@ -3,30 +3,30 @@ import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 
-const styles = {
-  card: {
-    display: 'flex',
-    justifyContent: 'center'
-  },
-  cardContent: {
-    width: '80%'
-  },
-};
 
 const logincard = (props) => {
-  const { classes } = props;
+  const styles = {
+    card: {
+      display: 'flex',
+      justifyContent: 'center',
+      height: props.height,
+      width: props.width
+    },
+    cardContent: {
+      width: '80%'
+    },
+  };
+  
+  console.log(props.width, props.height)
 
   return (
-    <div style={{width: props.width, height:props.height}}>
-      <Card className={classes.card} raised>
-        <CardContent className={classes.cardContent}>
+      <Card style={styles.card} raised>
+        <CardContent style={styles.cardContent}>
         {props.children}
         </CardContent>  
       </Card>
 
-    </div>
-
   );
 }
 
-export default withStyles(styles)(logincard);
+export default logincard;
