@@ -8,19 +8,35 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
 import FormTextField from '../../components/FormTextField/FormTextField';
-
+import LoyaltyCheck from '../../components/CreateUser/CreateUserSteppers/LoyaltyCheck'
+import StyledStepLabel from '../../components/CreateUser/CreateUserSteppers/StyledStepLabel'
+import PasswordCheck from '../../components/CreateUser/CreateUserSteppers/PasswordCheck';
+import EmailSent from '../../components/CreateUser/CreateUserSteppers/EmailSent';
 
 const styles = theme => ({
   root: {
-    width: '90%'
+    width: '100%',
   },
   button: {
     marginRight: theme.spacing.unit,
+    marginBottom: theme.spacing.unit,
   },
   instructions: {
     marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit,
   },
+  headerText: {
+    fontSize: '1.000em'
+  },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyItems: "center",
+    height: '100%',
+  },
+  label: {
+    fontSize: "0.05em"
+  }
 });
 
 function getSteps() {
@@ -33,8 +49,12 @@ class HorizontalLinearStepper extends React.Component {
     emailInvalid: false,
     loyaltyInvalid: false,
     passwordInvalid: false,
+    passwordLength: false,
+    passwordUpper: false,
+    passwordDigit: false,
     email: "",
     loyalty: "",
+    confirmPass: "",
     buttonEnabled: false,
   };
 
@@ -49,18 +69,12 @@ class HorizontalLinearStepper extends React.Component {
     form: {
       display: 'flex',
       flexDirection: 'column',
-      height: '300px',
+      height: '100%',
     },
     textInputs: {
       marginTop: '10px',
       marginBottom: '10px'
     },
-    headerText: {
-      marginTop: '10px',
-      marginBottom: '20px',
-      fontSize: '18px'
-
-    }
 
   }
 
@@ -70,8 +84,8 @@ class HorizontalLinearStepper extends React.Component {
 
     this.setState({
       emailInvalid: !check,
-      email: event.target.value,
-      buttonEnabled: !check && this.state.passwordInvalid
+      email: event.target.value, 
+      buttonEnabled: check && (this.state.activeStep === 0 && event.target.value !== "" && !this.state.loyaltyInvalid) 
     })
   }
 
@@ -79,115 +93,68 @@ class HorizontalLinearStepper extends React.Component {
     this.setState({
       loyaltyInvalid: event.target.value === "",
       loyalty: event.target.value,
-      buttonEnabled: event.target.value === "" && this.state.emailInvalid && this.state.passwordInvalid
     })
   }
 
   passwordChange = (event) => {
+    var length = event.target.value.length >= 10 &&  event.target.value.length < 128
+    var upper = /[A-Z]/.test(event.target.value)
+    var digit = /[0-9]+/.test(event.target.value)
+
     this.setState({
       passwordInvalid: event.target.value === "",
-      buttonEnabled: event.target.value === "" && this.state.emailInvalid && this.state.loyaltyInvalid
+      passwordLength: length,
+      passwordUpper: upper,
+      passwordDigit: digit,
+      confirmPass: event.target.value
     })
   }
 
-  setPassword() {
-    return (
-      <div style={this.styles.form}>
-        <Typography style={{ fontSize: "18px" }} gutterBottom>Please enter a password</Typography>
-        <FormTextField
-          id="password"
-          className={this.styles.textInputs}
-          // change={this.loyaltyChange}
-          // error={this.state.loyaltyInvalid}
-          required={true}
-          type="password"
-          label="Password"
-          // value={this.state.loyalty}
-          // helptext="A Loyalty number is needed"
-        />
-        <Typography style={this.styles.headerText}>Please confirm your password</Typography>
-        <FormTextField
-          id="form email"
-          className={this.styles.textInputs}
-          // change={this.emailChange}
-          // error={this.state.emailInvalid}
-          required={true}
-          label="Confirm Password"
-          // value={this.state.email}
-          type="password"
-          autoComplete="email"
-          // helptext="A valid email is required"
-        />
-      </div>
+  confirmPasswordChange = (event) => {
+    this.setState({
+      buttonEnabled: this.state.activeStep === 1 && !this.state.passwordInvalid 
+      && this.state.passwordLength 
+      && this.state.passwordUpper 
+      && this.state.passwordDigit 
 
-    );
+    })
   }
 
-  loyaltyCheck() {
-    return (
-      <div style={this.styles.form}>
-        <Typography style={{ fontSize: "18px" }} gutterBottom>Please enter your loyalty number below</Typography>
-        <Typography gutterBottom>Note: Your loyalty number is also your OSA#.</Typography>
-        <FormTextField
-          id="loyalty_field"
-          className={this.styles.textInputs}
-          change={this.loyaltyChange}
-          error={this.state.loyaltyInvalid}
-          required={true}
-          type="password"
-          label="Loyalty #"
-          value={this.state.loyalty}
-          helptext="A Loyalty number is needed"
-        />
-        <Typography style={this.styles.headerText}>Please enter the email used when registering with!</Typography>
-        <FormTextField
-          id="form email"
-          className={this.styles.textInputs}
-          change={this.emailChange}
-          error={this.state.emailInvalid}
-          required={true}
-          label="Email"
-          value={this.state.email}
-          autoComplete="email"
-          helptext="A valid email is required"
-        />
-      </div>
-    )
-  }
-
-  emailSent() {
-    return (<Typography gutterBottom>Email sent!</Typography>)
-  }
-
-  getStepContent(step) {
+  getStepContent(step, classes) {
     switch (step) {
       case 0:
-        return this.loyaltyCheck()
+        return <LoyaltyCheck
+          loyaltyChange={this.loyaltyChange}
+          loyaltyInvalid={this.state.loyaltyInvalid}
+          loyaltyValue={this.state.value}
+          emailChange={this.emailChange}
+          emailInvalid={this.state.emailInvalid}
+          emailValue={this.state.value}
+        />
       case 1:
-        return this.setPassword()
+        return <PasswordCheck
+        passwordChange={this.passwordChange}
+        confirmPasswordChange={this.confirmPasswordChange}
+        password={this.state.confirmPass}
+        length={this.state.passwordLength}
+        upper={this.state.passwordUpper}
+        digit={this.state.passwordDigit}
+         />
       case 2:
-        return this.emailSent()
+        return <EmailSent />
       default:
         return 'Unknown step';
     }
   }
-  isStepOptional = step => {
-    return step === 1;
-  };
 
   handleNext = () => {
     const { activeStep } = this.state;
     this.setState({
       activeStep: activeStep + 1,
+      buttonEnabled: false
     });
   };
 
-
-  handleReset = () => {
-    this.setState({
-      activeStep: 0,
-    });
-  };
 
   render() {
     const { classes } = this.props;
@@ -196,26 +163,27 @@ class HorizontalLinearStepper extends React.Component {
 
     return (
       <div className={classes.root}>
-        <Stepper activeStep={activeStep}>
+        <Stepper style={{ justifyContent: "center" }} activeStep={activeStep}>
           {steps.map((label, index) => {
             const props = {};
-            const labelProps = {};
+            const labelProps = { classes: classes.label }
             return (
               <Step key={label} {...props}>
-                <StepLabel {...labelProps}>{label}</StepLabel>
+                <StyledStepLabel>{label}</StyledStepLabel>
               </Step>
             );
           })}
         </Stepper>
-        <div>
-          {this.getStepContent(activeStep)}
-        </div>
+        <form className={classes.form}>
+          {this.getStepContent(activeStep, classes)}
+        </form>
         <div>
           <Button
             variant="contained"
             color="primary"
-            // disabled={!this.state.buttonEnabled}
+            disabled={!this.state.buttonEnabled}
             onClick={this.handleNext}
+            style={{ display: this.state.activeStep === 2 ? "none" : "block" }}
             className={classes.button}
           >
             Next
