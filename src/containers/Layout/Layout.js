@@ -1,18 +1,23 @@
 import React from 'react'
 import Toolbar from '../../components/Navigation/Toolbar';
+import { withStyles } from '@material-ui/core/styles';
 
-const Layout = (props) => {
-    const main_style = {
-        marginTop : '72px'
+const styles = {
+    main: {
+        marginTop : 100
     }
+
+}
+const Layout = (props) => {
+    const { classes } = props
 
     return (
         <>
             <Toolbar />
-            <main style={main_style}>
+            <main className={classes.main}>
                 {props.children}
             </main>
         </>
     );
 }
-export default Layout;
+export default withStyles(styles)(Layout)
