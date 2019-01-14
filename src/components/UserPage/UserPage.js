@@ -11,7 +11,7 @@ const UserPage = () => {
         flexDirection: "row",
         alignItems: "flex-start"
     }
-    console.log(style)
+    
     return (
         <div style={style}>
             <UserProfile />

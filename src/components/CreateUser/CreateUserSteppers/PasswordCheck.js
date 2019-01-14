@@ -8,7 +8,7 @@ import PasswordComplexityCheck from './PasswordComplexityCheck';
 const styles = theme => ({
     headerText: {
         [theme.breakpoints.up(557)]: {
-            fontSize: '1.000em',
+            fontSize: '1.225em',
         },
         [theme.breakpoints.down(556)]: {
             fontSize: '0.875em',

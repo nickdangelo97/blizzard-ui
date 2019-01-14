@@ -7,7 +7,7 @@ import FormTextField from '../../FormTextField/FormTextField';
 const styles = theme => ({
     headerText: {
         [theme.breakpoints.up(557)]: {
-            fontSize: '1.000em',
+            fontSize: '1.225em',
             marginBottom: 10
         },
         [theme.breakpoints.down(556)]: {

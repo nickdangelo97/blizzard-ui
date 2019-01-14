@@ -10,7 +10,7 @@ import { Card, CardContent, CardMedia } from '@material-ui/core';
 const styles = theme => ({
     title: {
         [theme.breakpoints.between('md', 'xl')]: {
-            fontSize: '1.000em',
+            fontSize: '1.225em',
         },
         [theme.breakpoints.between(0, 959)]: {
             fontSize: '0.875em',
