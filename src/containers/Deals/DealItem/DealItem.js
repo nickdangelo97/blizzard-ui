@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -37,9 +36,20 @@ const styles = theme => ({
     },
     submitButton: {
         marginTop: '10px',
-        marginLeft: '10px',
-        alignSelf: "center"
+        marginRight: 10,
+        alignSelf: "center",
+        [theme.breakpoints.down(556)]: {
+            fontSize: '0.650em',
+        },
     },
+    bodyText : {
+        [theme.breakpoints.up(557)]: {
+            fontSize: '1.300em',
+        },
+        [theme.breakpoints.down(556)]: {
+            fontSize: '1.150em',
+        },
+    }
 });
 
 function MediaControlCard(props) {
@@ -54,7 +64,7 @@ function MediaControlCard(props) {
             />
             <div className={classes.details}>
                 <CardContent className={classes.content}>
-                    <Typography component="h5" variant="h5">
+                    <Typography className={classes.bodyText}>
                         Title
           </Typography>
                 </CardContent>
@@ -71,10 +81,5 @@ function MediaControlCard(props) {
         </Card>
     );
 }
-
-MediaControlCard.propTypes = {
-    classes: PropTypes.object.isRequired,
-    theme: PropTypes.object.isRequired,
-};
 
 export default withStyles(styles, { withTheme: true })(MediaControlCard);

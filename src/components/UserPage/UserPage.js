@@ -1,23 +1,35 @@
 import React from 'react'
 import customStyles from "../../customStyles";
 import UserProfile from '../../containers/UserProfile/UserProfile';
-import UserCard from './UserCard/UserCard';
+import { withStyles } from '@material-ui/core/styles';
 import Deals from '../../containers/Deals/Deals';
 
-const UserPage = () => {
-    const style = {
-        ...customStyles.fullPage,
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "flex-start"
+const styles = theme => ({
+    root : {
+        [theme.breakpoints.up(1394)]: {
+            ...customStyles.pageCentered,
+            flexDirection: "row",
+            justifyContent: "space-evenly"
+        },
+        [theme.breakpoints.down(1393)]: {
+            ...customStyles.pageCentered,
+            flexDirection: "column",
+            alignContent: "space-around"
+    
+        },
     }
+
+})
+
+const UserPage = (props) => {
+    const { classes } = props
     
     return (
-        <div style={style}>
+        <div className={classes.root}>
             <UserProfile />
             <Deals />
         </div>
     );
 }
 
-export default UserPage
+export default withStyles(styles)(UserPage)
