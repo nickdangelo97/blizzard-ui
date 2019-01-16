@@ -7,21 +7,10 @@ import { Card, CardContent } from '@material-ui/core';
 
 const styles = theme => ({
     card: {
-
-        [theme.breakpoints.up(557)]: {
-            display: 'flex',
-            flexDirection: "column",
-            justifyContent: 'center',
-            alignItems: "center",
-        },
-        [theme.breakpoints.down(556)]: {
-            display: 'flex',
-            flexDirection: "column",
-            justifyContent: 'center',
-            alignItems: "center",
-            width: "90%",
-        },
-
+        display: 'flex',
+        flexDirection: "column",
+        justifyContent: 'center',
+        alignItems: "center",
     },
     cardContent: {
         width: '90%',
