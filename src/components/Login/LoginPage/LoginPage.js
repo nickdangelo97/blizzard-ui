@@ -56,8 +56,6 @@ const styles = theme => ({
 const LoginPage = (props) => {
     const { classes } = props
 
-    console.log(classes)
-
     return (
         <div style={customStyles.pageCentered}>
             <Card className={classes.card} raised>
