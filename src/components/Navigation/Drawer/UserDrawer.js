@@ -25,10 +25,11 @@ const styles = theme => ({
 
 });
 
-let list_items = (clicked) => {
+
+let list_items = (clicked, selected) => {
   return ["Current Deals", "My Profile"].map((txt, index) => (
-    <ListItem button onClick={event => clicked(event, index)} key={txt}>
-      {/* <ListItemIcon> <MoneyIcon /> </ListItemIcon> */}
+    <ListItem button selected={selected === index} onClick={event => clicked(event, index)} key={txt}>
+      <ListItemIcon> {index == 0 ? <MoneyIcon /> : <PersonIcon /> } </ListItemIcon>
       <ListItemText primary={txt} />
     </ListItem>
   ))
@@ -44,7 +45,7 @@ const UserDrawer = (props) => {
     >
       <div className={classes.toolbar} />
       <List>
-        {list_items(props.clicked)}
+        {list_items(props.clicked, props.selected)}
       </List>
     </Drawer>
   );
