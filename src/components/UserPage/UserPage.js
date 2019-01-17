@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import customStyles from "../../customStyles";
 import UserProfile from '../../containers/UserProfile/UserProfile';
 import { withStyles } from '@material-ui/core/styles';
@@ -22,21 +22,32 @@ const styles = theme => ({
 
 })
 
-const item_select = (event, index) => {
-    console.log(index)
+
+
+class UserPage extends Component {
+    state = {
+        itemSelected: 0
+    }
+
+    item_select = (event, index) => {
+        this.setState({itemSelected: index})
+        event.target.selected = true
+    }
+   
+    render() {
+        const { classes } = this.props
+        return (
+            <div className={classes.root}>
+                {this.state.itemSelected === 0 ? 
+                <Deals /> : 
+                <UserProfile />}
+
+                <UserDrawer selected={this.state.itemSelected} clicked={this.item_select} />
+            </div>
+        )
+    }
+
 }
 
-const UserPage = (props) => {
-    const { classes } = props
-    // state => get index => conditional render on index numero
-    
-    return (
-        <div className={classes.root}>
-            {/* <UserProfile />
-            <Deals /> */}
-            <UserDrawer clicked={item_select} />
-        </div>
-    );
-}
 
 export default withStyles(styles)(UserPage)
