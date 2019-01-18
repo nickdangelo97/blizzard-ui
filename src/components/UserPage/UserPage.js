@@ -10,7 +10,9 @@ const styles = theme => ({
         [theme.breakpoints.up(1394)]: {
             ...customStyles.pageCentered,
             flexDirection: "row",
-            justifyContent: "space-evenly"
+            maxWidth: "100%",
+            overflowX: "hidden",
+            justifyContent: "space-between"
         },
         [theme.breakpoints.down(1393)]: {
             ...customStyles.pageCentered,
@@ -38,11 +40,11 @@ class UserPage extends Component {
         const { classes } = this.props
         return (
             <div className={classes.root}>
+                <UserDrawer selected={this.state.itemSelected} clicked={this.item_select} />
                 {this.state.itemSelected === 0 ? 
                 <Deals /> : 
                 <UserProfile />}
 
-                <UserDrawer selected={this.state.itemSelected} clicked={this.item_select} />
             </div>
         )
     }

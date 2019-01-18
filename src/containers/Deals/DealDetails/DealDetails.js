@@ -40,21 +40,19 @@ const DealDetails = (props) => {
     const { classes } = props
 
     return (
-        <Slide direction="left" in={true} mountOnEnter unmountOnExit>
-            <div>
-                <div className={classes.detailsContainer}>
+            <div style={{ display: props.show ? "block" : "none"}}>
+                <div className={classes.detailsContainer}  >
                     <IconButton onClick={props.clicked}  >
                         <ArrowBackIos />
                     </IconButton>
 
                     <Typography className={classes.headerText} align="center">Title</Typography>
 
-                    <img src={Logo} style={{ maxWidth: 80 }} />
-
+                    <img src={Logo} style={{ maxWidth: 100 }} />
                 </div>
                 <Typography className={classes.bodyText} variant="subtitle1">All details</Typography>
+
             </div>
-        </Slide>
 
     );
 }

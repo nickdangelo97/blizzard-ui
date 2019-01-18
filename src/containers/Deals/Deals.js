@@ -1,26 +1,17 @@
 import React, { Component } from 'react';
-import { Typography, Card, CardContent, List, ListItem, Slide } from '@material-ui/core';
+import { Typography, Card, content, List,  Slide, Switch } from '@material-ui/core';
+import ListItem from '@material-ui/core/ListItem';
+
 import { withStyles } from '@material-ui/core/styles';
 import DealItem from './DealItem/DealItem';
 import DealDetails from './DealDetails/DealDetails';
 
 const test = [...Array(20).keys()]
 const styles = theme => ({
-    card: {
-        display: 'flex',
-        flexDirection: "column",
-        width: "60%",
-        height: 486,
-        [theme.breakpoints.down(556)]: {
-            minWidth: 0,
-            width: "90%",
-        },
-    },
-    cardContent: {
-        display: 'flex',
+    content: {
         flexDirection: "column",
         justifyContent: 'center',
-        // width: "100%"
+        width: "100%"
     },
     headerText: {
         [theme.breakpoints.up(557)]: {
@@ -42,48 +33,18 @@ class Deals extends Component {
         this.setState({ showDetails: !this.state.showDetails })
     }
 
-    list_items = deals => {
-        var items = []
-        var i = 0;
-        for (const deal in deals) {
-            items.push(
-                <ListItem key={i}>
-                    <DealItem showDetails={this.state.showDetails} clicked={this.onClick} />
-                </ListItem>
-
-            )
-
-            i++
-        }
-
-        return items
-    }
-
-    get_item = (details) => {
-        if (details) {
-            return (
-                <DealDetails clicked={this.onClick} />
-            )
-        }
-        else {
-            return (
-                <Slide direction="right" in={!details} unmountOnExit>
-
-                    <List style={{ overflow: "auto", maxHeight: 486, alignItems: "center", }} >
-                        {this.list_items(test).map((item, i) => item)}
-
-                    </List>
-                </Slide>
-            )
-        }
+    list_items = (items, clicked) => {
+        return items.map((item, i) => (
+            <DealItem key={i} clicked={this.onClick} />
+        ))
     }
 
 
     render() {
         const { classes } = this.props
         return (
-            <Card className={classes.card} raised>
-                <CardContent className={classes.cardContent}>
+            <>
+            <div className={classes.content} >
                     <Typography align="left"
                         className={classes.headerText}
                         style={{ fontWeight: 500 }}>
@@ -98,9 +59,13 @@ class Deals extends Component {
                             width: "100%"
                         }}
                     />
-                    {this.get_item(this.state.showDetails)}
-                </CardContent>
-            </Card>
+                    <List  style={{ overflow: "auto",  display: this.state.showDetails ? "none" : "block", maxHeight: "83vh",}} >
+                        {this.list_items(test)}
+                    </List>
+                    <DealDetails  clicked={this.onClick} show={this.state.showDetails} />
+
+            </div>
+            </>
         )
     }
 }
