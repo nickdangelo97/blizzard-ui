@@ -59,7 +59,7 @@ class Deals extends Component {
                             width: "100%"
                         }}
                     />
-                    <List  style={{ overflow: "auto",  display: this.state.showDetails ? "none" : "block", maxHeight: "83vh",}} >
+                    <List  style={{ overflow: "auto",  display: this.state.showDetails ? "none" : "block", maxHeight: "75vh",}} >
                         {this.list_items(test)}
                     </List>
                     <DealDetails  clicked={this.onClick} show={this.state.showDetails} />
