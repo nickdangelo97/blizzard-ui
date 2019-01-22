@@ -30,6 +30,7 @@ const styles = theme => ({
         alignSelf: "flex-end"
     },
     headerText: {
+        marginLeft: 20,
         [theme.breakpoints.up(557)]: {
             fontSize: '2.500em',
         },

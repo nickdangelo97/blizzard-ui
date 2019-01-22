@@ -33,7 +33,8 @@ class UserPage extends Component {
                 <UserDrawer
                     open={this.props.drawerState}
                     selected={this.state.itemSelected}
-                    clicked={this.item_select} />
+                    clicked={this.item_select}
+                    closed={this.props.clicked} />
                 {this.state.itemSelected === 0 ?
                     <Deals /> :
                     <UserProfile />}

@@ -14,6 +14,7 @@ const styles = theme => ({
         width: "100%"
     },
     headerText: {
+        marginLeft: 20,
         [theme.breakpoints.up(557)]: {
             fontSize: '2.500em',
         },

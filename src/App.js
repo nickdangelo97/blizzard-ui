@@ -9,7 +9,7 @@ import theme from './theme';
 
 class App extends Component {
   state = {
-    openDrawer:true
+    openDrawer:false
   }
   drawerButtonClicked = (event) => {
     this.setState({ openDrawer: !this.state.openDrawer })
@@ -21,7 +21,7 @@ class App extends Component {
           <Layout clicked={this.drawerButtonClicked}>
             {/* <CreateUser /> */}
             {/* <LoginPage /> */}
-            <UserPage drawerState={this.state.openDrawer}/>
+            <UserPage clicked={this.drawerButtonClicked} drawerState={this.state.openDrawer}/>
             {/* <Switch>
         <Route path="/" exact component={LoginPage} />
         <Route path="/createuser" exact component={CreateUserPage} />

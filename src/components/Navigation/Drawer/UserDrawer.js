@@ -4,7 +4,7 @@ import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import MoneyIcon from '@material-ui/icons/MonetizationOn';
 import PersonIcon from '@material-ui/icons/Person'
-import { ListItem , ListItemIcon, ListItemText } from '@material-ui/core';
+import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 
 
 const drawerWidth = 240;
@@ -13,6 +13,7 @@ const styles = theme => ({
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
+    zIndex: 20,
   },
   drawerPaper: {
     width: drawerWidth,
@@ -29,7 +30,7 @@ const styles = theme => ({
 let list_items = (clicked, selected) => {
   return ["Current Deals", "My Profile"].map((txt, index) => (
     <ListItem button selected={selected === index} onClick={event => clicked(event, index)} key={txt}>
-      <ListItemIcon> {index == 0 ? <MoneyIcon /> : <PersonIcon /> } </ListItemIcon>
+      <ListItemIcon> {index == 0 ? <MoneyIcon /> : <PersonIcon />} </ListItemIcon>
       <ListItemText primary={txt} />
     </ListItem>
   ))
@@ -37,14 +38,14 @@ let list_items = (clicked, selected) => {
 
 const UserDrawer = (props) => {
   const { classes } = props
-  console.log("PROPS ARE", props)
   return (
     <Drawer
       className={classes.drawer}
       open={props.open}
-      variant="persistent"
+      variant="temporary"
       anchor="left"
       classes={{ paper: classes.paper }}
+      onClose={props.closed}
     >
       <div className={classes.toolbar} />
       <List>
