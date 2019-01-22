@@ -8,18 +8,26 @@ import theme from './theme';
 
 
 class App extends Component {
+  state = {
+    openDrawer:true
+  }
+  drawerButtonClicked = (event) => {
+    this.setState({ openDrawer: !this.state.openDrawer })
+  }
   render() {
     return (
       <div className="App">
         <MuiThemeProvider theme={theme}>
-          <Layout />
-          {/* <CreateUser /> */}
-          {/* <LoginPage /> */}
-          {/* <UserPage /> */}
-          {/* <Switch>
+          <Layout clicked={this.drawerButtonClicked}>
+            {/* <CreateUser /> */}
+            {/* <LoginPage /> */}
+            <UserPage drawerState={this.state.openDrawer}/>
+            {/* <Switch>
         <Route path="/" exact component={LoginPage} />
         <Route path="/createuser" exact component={CreateUserPage} />
       </Switch> */}
+          </Layout>
+
         </MuiThemeProvider>
 
       </div>

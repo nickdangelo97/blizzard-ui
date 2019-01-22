@@ -6,25 +6,15 @@ import Deals from '../../containers/Deals/Deals';
 import UserDrawer from '../Navigation/Drawer/UserDrawer';
 
 const styles = theme => ({
-    root : {
-        [theme.breakpoints.up(1394)]: {
-            ...customStyles.pageCentered,
-            flexDirection: "row",
-            maxWidth: "100%",
-            overflowX: "hidden",
-            justifyContent: "space-between"
-        },
-        [theme.breakpoints.down(1393)]: {
-            ...customStyles.pageCentered,
-            flexDirection: "column",
-            alignContent: "space-around"
-    
-        },
+    root: {
+        ...customStyles.pageCentered,
+
+        flexDirection: "row",
+        maxWidth: "100%",
+        overflowX: "hidden",
+        justifyContent: "space-between"
     }
-
 })
-
-
 
 class UserPage extends Component {
     state = {
@@ -32,18 +22,21 @@ class UserPage extends Component {
     }
 
     item_select = (event, index) => {
-        this.setState({itemSelected: index})
+        this.setState({ itemSelected: index })
         event.target.selected = true
     }
-   
+
     render() {
         const { classes } = this.props
         return (
             <div className={classes.root}>
-                <UserDrawer selected={this.state.itemSelected} clicked={this.item_select} />
-                {this.state.itemSelected === 0 ? 
-                <Deals /> : 
-                <UserProfile />}
+                <UserDrawer
+                    open={this.props.drawerState}
+                    selected={this.state.itemSelected}
+                    clicked={this.item_select} />
+                {this.state.itemSelected === 0 ?
+                    <Deals /> :
+                    <UserProfile />}
 
             </div>
         )

@@ -13,7 +13,7 @@ const Layout = (props) => {
 
     return (
         <>
-            <Toolbar />
+            <Toolbar clicked={props.clicked}/>
             <main className={classes.main}>
                 {props.children}
             </main>

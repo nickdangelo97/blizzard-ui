@@ -43,7 +43,7 @@ function SimpleAppBar(props) {
     <div className={classes.root}>
       <AppBar position="static" className={classes.appbar}>
         <Toolbar className={classes.toolbar}>
-          <IconButton color="inherit" style={{ marginRight: "auto" }}>
+          <IconButton onClick={props.clicked} color="inherit" style={{ marginRight: "auto" }}>
             <MenuIcon />
           </IconButton>
           <img src={Logo} className={classes.logo} />

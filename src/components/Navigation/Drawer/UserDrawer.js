@@ -37,10 +37,13 @@ let list_items = (clicked, selected) => {
 
 const UserDrawer = (props) => {
   const { classes } = props
+  console.log("PROPS ARE", props)
   return (
     <Drawer
       className={classes.drawer}
-      variant="permanent"
+      open={props.open}
+      variant="persistent"
+      anchor="left"
       classes={{ paper: classes.paper }}
     >
       <div className={classes.toolbar} />
