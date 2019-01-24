@@ -14,25 +14,22 @@ const styles = theme => ({
   appbar: {
     height: "56px",
     position: "fixed",
+    width: "100%",
     top: "0",
     left: "0",
     backgroundColor: theme.palette.primary.main,
     padding: "0 20px",
     zIndex: theme.zIndex.drawer + 1,
+    
   },
-
   toolbar: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center"
-
+    flexDirection: "column",
+    alignItems: "center",
   },
-
   logo: {
-    height: "80px",
-    marginTop: "20px",
-    marginRight: "auto"
+    height: 80,
+    marginTop: -42,
+    marginRight: 5,
   },
 });
 
@@ -43,7 +40,7 @@ function SimpleAppBar(props) {
     <div className={classes.root}>
       <AppBar position="static" className={classes.appbar}>
         <Toolbar className={classes.toolbar}>
-          <IconButton onClick={props.clicked} color="inherit" style={{ marginRight: "auto" }}>
+          <IconButton onClick={props.clicked} color="inherit" style={{alignSelf: "flex-start"}}>
             <MenuIcon />
           </IconButton>
           <img src={Logo} className={classes.logo} />

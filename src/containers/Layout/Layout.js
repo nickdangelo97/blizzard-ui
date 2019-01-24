@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 const styles = {
     main: {
-        marginTop : 100
+        marginTop : 125
     }
 
 }
