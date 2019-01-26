@@ -8,11 +8,6 @@ import UserDrawer from '../Navigation/Drawer/UserDrawer';
 const styles = theme => ({
     root: {
         ...customStyles.pageCentered,
-
-        flexDirection: "row",
-        maxWidth: "100%",
-        overflowX: "hidden",
-        justifyContent: "space-between"
     }
 })
 
