@@ -8,6 +8,9 @@ import LoginCard from '../LoginCard/LoginCard';
 import { Card, CardContent, CardMedia } from '@material-ui/core';
 
 const styles = theme => ({
+    root: {
+        ...customStyles.pageCentered
+    },
     title: {
         [theme.breakpoints.between('md', 'xl')]: {
             fontSize: '1.225em',
@@ -17,38 +20,28 @@ const styles = theme => ({
         },
     },
     card: {
-
-        [theme.breakpoints.between('md', 'xl')]: {
-            display: 'flex',
-            flexDirection: "column",
-            justifyContent: 'center',
-            alignItems: "center",
-            width: "35%",
-            height: "62%"
-        },
-        [theme.breakpoints.between(0, 959)]: {
-            display: 'flex',
-            flexDirection: "column",
-            justifyContent: 'center',
-            alignItems: "center",
-            width: "80%",
-            height: "62%"
-        },
-
+        width: "90%",
+        maxWidth: 600,
+        alignSelf: "center"
     },
     cardContent: {
-        width: '90%',
-        height: "100%",
         display: 'flex',
         flexDirection: "column",
         justifyContent: 'center',
-    },
-    logo: {
+    }, 
+    logoContainer: {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         marginTop: 15,
         justifyContent: "center",
+    },
+    logo: {
+        [theme.breakpoints.up(557)]: {
+            maxWidth: 200        },
+        [theme.breakpoints.down(556)]: {
+            maxWidth: 150
+        },
     }
 
 })
@@ -57,13 +50,13 @@ const LoginPage = (props) => {
     const { classes } = props
 
     return (
-        <div style={customStyles.pageCentered}>
+        <div className={classes.root}>
             <Card className={classes.card} raised>
 
                 <CardContent className={classes.cardContent}>
-                    <div className={classes.logo}>
+                    <div className={classes.logoContainer}>
                     
-                        <img src={Logo} style={{ width: "40%", height: "40%" }} />
+                        <img src={Logo} className={classes.logo} />
                         <Typography
                             className={classes.title}
                             align="center"
