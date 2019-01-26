@@ -4,16 +4,18 @@ import { withStyles } from '@material-ui/core/styles';
 
 const styles = {
     main: {
-        marginTop : 125
+        marginTop: 125,
+        width: "100%",
+        height: "calc(100vh - 125px)"
     }
-
 }
+
 const Layout = (props) => {
     const { classes } = props
 
     return (
         <>
-            <Toolbar clicked={props.clicked}/>
+            <Toolbar clicked={props.clicked} />
             <main className={classes.main}>
                 {props.children}
             </main>
