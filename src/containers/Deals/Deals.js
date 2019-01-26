@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Typography, Card, content, List,  Slide, Switch } from '@material-ui/core';
-import ListItem from '@material-ui/core/ListItem';
+import { Typography, Card, content, List, Slide, Switch } from '@material-ui/core';
 
 import { withStyles } from '@material-ui/core/styles';
 import DealItem from './DealItem/DealItem';
@@ -22,7 +21,10 @@ const styles = theme => ({
             fontSize: '1.900em',
         },
     },
-    
+    list: {
+        overflow: "auto", 
+        height: "100vh"
+    }
 })
 
 class Deals extends Component {
@@ -45,7 +47,7 @@ class Deals extends Component {
         const { classes } = this.props
         return (
             <>
-            <div className={classes.content} >
+                <div className={classes.content} >
                     <Typography align="left"
                         className={classes.headerText}
                         style={{ fontWeight: 500 }}>
@@ -60,12 +62,12 @@ class Deals extends Component {
                             width: "100%"
                         }}
                     />
-                    <List  style={{ overflow: "auto",  display: this.state.showDetails ? "none" : "block", maxHeight: "75vh",}} >
+
+                    <List className={classes.list} style={{display: this.state.showDetails ? "none" : "block", }}>
                         {this.list_items(test)}
                     </List>
-                    <DealDetails  clicked={this.onClick} show={this.state.showDetails} />
-
-            </div>
+                    <DealDetails clicked={this.onClick} show={this.state.showDetails} />
+                </div>
             </>
         )
     }

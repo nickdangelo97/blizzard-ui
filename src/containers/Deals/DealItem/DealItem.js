@@ -12,15 +12,22 @@ const styles = theme => ({
     card: {
         display: 'flex',
         marginTop: "15px",
-        width: "40%"
+        minWidth: "60%"
     },
     details: {
         display: 'flex',
         flexDirection: 'row',
     },
     logo: {
-        width: 125,
-        height: 125,
+
+        [theme.breakpoints.up(557)]: {
+            width: 125,
+            height: 125,
+        },
+        [theme.breakpoints.down(556)]: {
+            width: 60,
+            height: 60,
+        },
         borderRight: "1px solid red",
         paddingRight: 25
 
@@ -40,7 +47,7 @@ const styles = theme => ({
             fontSize: '1.2000em',
         },
         [theme.breakpoints.down(556)]: {
-            fontSize: '1.300em',
+            fontSize: '1.100em',
         },
 
     },
