@@ -30,7 +30,7 @@ const styles = theme => ({
 
 let list_items = (clicked, selected) => {
   return [{ title: "Current Deals", path: "/deals" }, { title: "My Profile", path: "/profile" }].map((object, index) => (
-    <Link to={object.path} key={object.title}>
+    <Link to={object.path} style={{ textDecoration: 'none' }} key={object.title}>
       <ListItem button >
         <ListItemIcon> {index == 0 ? <MoneyIcon /> : <PersonIcon />} </ListItemIcon>
         <ListItemText primary={object.title} />
