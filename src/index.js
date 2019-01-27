@@ -10,9 +10,9 @@ import store from './util/store';
 
 ReactDOM.render(
     <Provider store={store}>
-            <BrowserRouter>
-        <App />
-    </BrowserRouter>
+        <BrowserRouter>
+            <App />
+        </BrowserRouter>
     </Provider>
 
     ,
