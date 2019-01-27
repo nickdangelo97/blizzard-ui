@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Typography, Card, CardMedia, CardContent, List, ListItem } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import customStyles from "../../customStyles";
 import Logo from '../../assets/torontoblizzard.png'
 
 const test = {
@@ -20,6 +21,9 @@ const test = {
 }
 
 const styles = theme => ({
+    root: {
+        ...customStyles.pageCentered,
+    },
     content: {
         flexDirection: "column",
         justifyContent: 'center',
@@ -69,25 +73,27 @@ class UserProfile extends Component {
         const { classes } = this.props
 
         return (
-            <div className={classes.content}>
-                <Typography
-                    align="left"
-                    className={classes.headerText}
-                    style={{ fontWeight: 500 }}>
-                    Name
+            <div className={classes.root}>
+                <div className={classes.content}>
+                    <Typography
+                        align="left"
+                        className={classes.headerText}
+                        style={{ fontWeight: 500 }}>
+                        Name
                     </Typography>
-                {/* <img src={Logo} className={classes.logo} /> */}
-                <hr
-                    style={{
-                        color: "#D3D3D3",
-                        backgroundColor: "#D3D3D3",
-                        height: 0.1,
-                        width: "100%"
-                    }}
-                />
-                <List>
-                    {this.list_items(test, classes.bodyText, classes.listItem)}
-                </List>
+                    {/* <img src={Logo} className={classes.logo} /> */}
+                    <hr
+                        style={{
+                            color: "#D3D3D3",
+                            backgroundColor: "#D3D3D3",
+                            height: 0.1,
+                            width: "100%"
+                        }}
+                    />
+                    <List>
+                        {this.list_items(test, classes.bodyText, classes.listItem)}
+                    </List>
+                </div>
             </div>
         );
     }

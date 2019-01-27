@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import { Typography, Card, content, List, Slide, Switch } from '@material-ui/core';
-
+import customStyles from "../../customStyles";
 import { withStyles } from '@material-ui/core/styles';
 import DealItem from './DealItem/DealItem';
 import DealDetails from './DealDetails/DealDetails';
 
 const test = [...Array(20).keys()]
 const styles = theme => ({
+    root: {
+        ...customStyles.pageCentered,
+    },
     content: {
         flexDirection: "column",
         justifyContent: 'center',
@@ -46,7 +49,7 @@ class Deals extends Component {
     render() {
         const { classes } = this.props
         return (
-            <>
+            <div className={classes.root}>
                 <div className={classes.content} >
                     <Typography align="left"
                         className={classes.headerText}
@@ -68,7 +71,7 @@ class Deals extends Component {
                     </List>
                     <DealDetails clicked={this.onClick} show={this.state.showDetails} />
                 </div>
-            </>
+            </div>
         )
     }
 }
