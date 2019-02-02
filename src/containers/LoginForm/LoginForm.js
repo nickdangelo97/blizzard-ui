@@ -3,7 +3,9 @@ import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import FormTextField from '../../components/FormTextField/FormTextField';
-import { Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
+import { connect } from 'react-redux'
+import { loginUser } from '../../util/actions'
 
 
 const styles = theme => ({
@@ -33,6 +35,7 @@ const styles = theme => ({
 class LoginForm extends Component {
     state = {
         email: '',
+        password: '',
         emailInvalid: false
     }
 
@@ -58,50 +61,49 @@ class LoginForm extends Component {
 
     onSubmit = (event) => {
         event.preventDefault();
+        this.props.loginUser({ email: this.state.email, password: this.state.password })
     }
 
     render() {
-        const { email, emailInvalid } = this.state
+        const { email, emailInvalid, password } = this.state
         const { classes } = this.props
 
         return (
-            <form className={classes.form} onSubmit={this.onSubmit}>
-                <FormTextField
-                    id="form email"
-                    className={classes.textInputs}
-                    change={this.emailChange}
-                    error={emailInvalid}
-                    required={this.validations.email.required}
-                    label="Email"
-                    value={email}
-                    autoComplete="email"
-                    helptext="A valid email is required"
-                />
+            <>
+                <form className={classes.form} onSubmit={this.onSubmit}>
+                    <FormTextField
+                        id="form email"
+                        className={classes.textInputs}
+                        change={this.emailChange}
+                        error={emailInvalid}
+                        required={this.validations.email.required}
+                        label="Email"
+                        value={email}
+                        autoComplete="email"
+                        helptext="A valid email is required"
+                    />
 
-                <FormTextField
-                    id="form-password"
-                    className={classes.textInputs}
-                    label="Password"
-                    helptext="A password is required to sign in"
-                    required={this.validations.password.required}
-                    type="password"
-                    autoComplete="current-password"
-                />
+                    <FormTextField
+                        id="form-password"
+                        className={classes.textInputs}
+                        label="Password"
+                        helptext="A password is required to sign in"
+                        required={this.validations.password.required}
+                        type="password"
+                        change={event => { this.setState({ password: event.target.value }) }}
+                        value={password}
+                        autoComplete="current-password"
+                    />
 
-                
+                    <Button className={classes.submitButton} type="submit" variant="contained" color="primary" size="small">Submit</Button>
+                    <Button className={classes.submitButton} variant="contained" size="small">Clear</Button>
+                </form>
+            </>
 
-                <Typography
-                    align="center"
-                    gutterBottom>
-                    <Link to="/createuser" className={classes.clickHere}>First time signing in? Click here!</Link>
-                </Typography>
-
-                <Button className={classes.submitButton} type="submit" variant="contained" color="primary" size= "small">Submit</Button>
-                <Button className={classes.submitButton} variant="contained" size= "small">Clear</Button>
-            </form>
 
         )
     }
 }
 
-export default withStyles(styles)(LoginForm);
+export default withRouter(connect(state => ({ isAuth: state.rootReducer.isAuth }),
+    dispatch => ({ loginUser: credentials => dispatch(loginUser(credentials)) }))(withStyles(styles)(LoginForm)))

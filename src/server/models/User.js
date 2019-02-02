@@ -39,6 +39,9 @@ module.exports = (sequelize, type) => {
         gender: {
             type: type.STRING
         },
+        refreshToken: {
+            type: type.STRING(600)
+        },
         active: {
             type: type.BOOLEAN,
             allowNull: false,

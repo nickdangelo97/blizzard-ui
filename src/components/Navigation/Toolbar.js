@@ -6,6 +6,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 import Logo from '../../assets/torontoblizzard.png'
 import { IconButton } from '@material-ui/core';
+import { connect } from 'react-redux'
+
 
 const styles = theme => ({
   root: {
@@ -20,7 +22,7 @@ const styles = theme => ({
     backgroundColor: theme.palette.primary.main,
     padding: "0 20px",
     zIndex: theme.zIndex.drawer + 1,
-    
+
   },
   toolbar: {
     flexDirection: "column",
@@ -34,13 +36,13 @@ const styles = theme => ({
 });
 
 function SimpleAppBar(props) {
-  const { classes } = props;
+  const { classes, isAuth } = props;
 
   return (
     <div className={classes.root}>
       <AppBar position="static" className={classes.appbar}>
         <Toolbar className={classes.toolbar}>
-          <IconButton onClick={props.clicked} color="inherit" style={{alignSelf: "flex-start"}}>
+          <IconButton onClick={props.clicked} color="inherit" style={{ alignSelf: "flex-start", visibility: isAuth ? 'visible' : 'hidden' }}>
             <MenuIcon />
           </IconButton>
           <img src={Logo} className={classes.logo} />
@@ -50,4 +52,4 @@ function SimpleAppBar(props) {
   );
 }
 
-export default withStyles(styles)(SimpleAppBar);
+export default connect(state => ({ isAuth: state.rootReducer.isAuth }))(withStyles(styles)(SimpleAppBar));

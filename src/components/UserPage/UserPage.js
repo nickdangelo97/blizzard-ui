@@ -1,8 +1,13 @@
 import React, { Component } from 'react'
 import customStyles from "../../customStyles";
+import { Route, Switch, Redirect } from 'react-router'
+
 import UserProfile from '../../containers/UserProfile/UserProfile';
 import { withStyles } from '@material-ui/core/styles';
 import Deals from '../../containers/Deals/Deals';
+import ProtectedRoute from '../..//util/ProtectedRoute';
+import DealDetails from '../../containers/Deals/DealDetails/DealDetails';
+
 
 const styles = theme => ({
     root: {
@@ -20,11 +25,18 @@ class UserPage extends Component {
         event.target.selected = true
     }
 
-    
+
     render() {
-        const { classes } = this.props
+        const { classes, match } = this.props
+        
         return (
             <div className={classes.root}>
+            <Switch>
+                <Route path= {match.url + "/deals"} exact component={Deals} />
+                <Route path= {match.url + "/profile"} exact component={UserProfile} />
+                <Route path= {match.url + "/deals/:id"} exact component={DealDetails} />
+            </Switch>
+
 
             </div>
         )

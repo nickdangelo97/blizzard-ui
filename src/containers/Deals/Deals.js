@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { Typography, Card, content, List, Slide, Switch } from '@material-ui/core';
+import { Typography, List } from '@material-ui/core';
 import customStyles from "../../customStyles";
 import { withStyles } from '@material-ui/core/styles';
 import DealItem from './DealItem/DealItem';
 import DealDetails from './DealDetails/DealDetails';
+import { connect } from 'react-redux'
+import { getDeals } from '../../util/actions'
 
-const test = [...Array(20).keys()]
+// const test = [...Array(20).keys()]
 const styles = theme => ({
     root: {
         ...customStyles.pageCentered,
@@ -25,23 +27,23 @@ const styles = theme => ({
         },
     },
     list: {
-        overflow: "auto", 
+        overflow: "auto",
         height: "100vh"
     }
 })
 
 class Deals extends Component {
     state = {
-        showDetails: false
+        showDetails: false,
     }
 
-    onClick = () => {
-        this.setState({ showDetails: !this.state.showDetails })
+    componentDidMount() {
+        this.props.getDeals(this.props.isAuth)
     }
 
     list_items = (items, clicked) => {
         return items.map((item, i) => (
-            <DealItem key={i} clicked={this.onClick} />
+             <DealItem key={i} info={item} />
         ))
     }
 
@@ -50,6 +52,7 @@ class Deals extends Component {
         const { classes } = this.props
         return (
             <div className={classes.root}>
+
                 <div className={classes.content} >
                     <Typography align="left"
                         className={classes.headerText}
@@ -66,14 +69,14 @@ class Deals extends Component {
                         }}
                     />
 
-                    <List className={classes.list} style={{display: this.state.showDetails ? "none" : "block", }}>
-                        {this.list_items(test)}
+                    <List className={classes.list} style={{ display: this.state.showDetails ? "none" : "block", }}>
+                        {this.list_items(this.props.deals)}
                     </List>
-                    <DealDetails clicked={this.onClick} show={this.state.showDetails} />
                 </div>
             </div>
         )
     }
 }
 
-export default withStyles(styles)(Deals);
+export default connect(state => ({ deals: state.rootReducer.deals, isAuth: state.rootReducer.isAuth }),
+dispatch => ({ getDeals: payload => dispatch(getDeals(payload)) }))(withStyles(styles)(Deals));

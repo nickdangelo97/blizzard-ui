@@ -6,6 +6,8 @@ import MoneyIcon from '@material-ui/icons/MonetizationOn';
 import PersonIcon from '@material-ui/icons/Person'
 import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { Link } from 'react-router-dom'
+import { withRouter } from "react-router";
+
 
 
 const drawerWidth = 240;
@@ -28,10 +30,10 @@ const styles = theme => ({
 });
 
 
-let list_items = (clicked, selected) => {
-  return [{ title: "Current Deals", path: "/deals" }, { title: "My Profile", path: "/profile" }].map((object, index) => (
+let list_items = (current) => {
+  return [{ title: "Current Deals", path: "/user/deals" }, { title: "My Profile", path: "/user/profile" }].map((object, index) => (
     <Link to={object.path} style={{ textDecoration: 'none' }} key={object.title}>
-      <ListItem button >
+      <ListItem selected={current === object.path} button >
         <ListItemIcon> {index == 0 ? <MoneyIcon /> : <PersonIcon />} </ListItemIcon>
         <ListItemText primary={object.title} />
       </ListItem>
@@ -41,8 +43,10 @@ let list_items = (clicked, selected) => {
 }
 
 class UserDrawer extends Component {
+
   render() {
-    const { classes } = this.props
+    const { classes, location } = this.props
+    
     return (
       <Drawer
         className={classes.drawer}
@@ -54,7 +58,7 @@ class UserDrawer extends Component {
       >
         <div className={classes.toolbar} />
         <List>
-          {list_items(this.props.clicked, this.props.selected)}
+          {list_items(location.pathname)}
         </List>
       </Drawer>
     );
@@ -62,4 +66,4 @@ class UserDrawer extends Component {
 }
 
 
-export default withStyles(styles)(UserDrawer);
+export default withRouter(withStyles(styles)(UserDrawer));

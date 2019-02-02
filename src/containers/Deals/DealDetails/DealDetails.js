@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { Typography, IconButton, Icon } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { ArrowBackIos } from '@material-ui/icons'
 import { Slide } from '@material-ui/core';
-import Logo from '../../../assets/fc.png'
+// import Logo from '../../../assets/fc.png'
+import { Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
+
 
 const styles = theme => ({
     detailsContainer: {
@@ -11,10 +14,11 @@ const styles = theme => ({
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "flex-start"
+        justifyContent: "space-between"
     },
-    headerText : {
-        width: "100%" ,
+    headerText: {
+        // width: "100%",
+        marginLeft: 50,
         [theme.breakpoints.up(557)]: {
             fontSize: '1.300em',
         },
@@ -23,9 +27,9 @@ const styles = theme => ({
         },
     },
     bodyText: {
-        marginTop: 10, 
-        marginLeft: 10, 
-        alignSelf: "flex-end" ,
+        marginTop: 10,
+        marginLeft: 10,
+        alignSelf: "flex-end",
         [theme.breakpoints.up(557)]: {
             fontSize: '1.000em',
         },
@@ -33,27 +37,42 @@ const styles = theme => ({
             fontSize: '0.875em',
         },
     },
-    
+
 })
 
-const DealDetails = (props) => {
-    const { classes } = props
+class DealDetails extends Component {
+    state = {
+        backClicked: false
+    }
 
-    return (
-            <div style={{ display: props.show ? "block" : "none"}}>
+    backClicked = (event) => {
+        this.setState({ backClicked: true })
+    }
+
+    render() {
+        const { classes, deals, match } = this.props
+        const deal = deals[match.params.id - 1]
+
+        if(this.state.backClicked) {
+          return <Redirect to="/user/deals" />      
+        }
+
+        return (
+            <div>
                 <div className={classes.detailsContainer}  >
-                    <IconButton onClick={props.clicked}  >
+                    <IconButton onClick={this.backClicked}>
                         <ArrowBackIos />
                     </IconButton>
 
-                    <Typography className={classes.headerText} align="center">Title</Typography>
+                    <Typography className={classes.headerText}>{deal.title}</Typography>
 
-                    <img src={Logo} style={{ maxWidth: 100 }} />
+                    {/* <img src={Logo} style={{ maxWidth: 100 }} /> */}
                 </div>
-                <Typography className={classes.bodyText} variant="subtitle1">All details</Typography>
-
+                <Typography className={classes.bodyText} variant="subtitle1">{deal.details}</Typography>
             </div>
 
-    );
+        );
+    }
 }
-export default withStyles(styles)(DealDetails); 
+
+export default connect(state => ({ deals: state.rootReducer.deals }))(withStyles(styles)(DealDetails))

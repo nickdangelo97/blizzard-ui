@@ -1,5 +1,7 @@
 const Sequelize = require('sequelize')
 const UserModel = require('./models/User')
+const DealsModel = require('./models/Deals')
+
 
 const sequelize = new Sequelize('blizzardcrm', 'nick2', '6197', {
     host: '127.0.0.1',
@@ -24,6 +26,7 @@ const sequelize = new Sequelize('blizzardcrm', 'nick2', '6197', {
   });
 
   const User = UserModel(sequelize, Sequelize)
+  const Deals = DealsModel(sequelize, Sequelize)
 
   sequelize.sync({ force: true })
   .then(() => {
@@ -32,5 +35,6 @@ const sequelize = new Sequelize('blizzardcrm', 'nick2', '6197', {
 
 
 module.exports = {
-  User
+  User,
+  Deals 
 }

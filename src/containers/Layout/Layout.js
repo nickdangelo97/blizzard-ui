@@ -5,7 +5,7 @@ import UserDrawer from '../../components/Navigation/Drawer/UserDrawer';
 
 const styles = {
     main: {
-        marginTop: 125,
+        marginTop: 105,
         width: "100%",
         height: "calc(100vh - 125px)"
     }

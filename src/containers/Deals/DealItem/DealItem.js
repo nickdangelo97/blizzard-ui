@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import ListItem from '@material-ui/core/ListItem';
-import Logo from '../../../assets/fc.png'
+// import Logo from '../../../assets/fc.png'
 import { CardActionArea } from '@material-ui/core';
+
+import { Redirect } from 'react-router-dom'
 
 const styles = theme => ({
     card: {
@@ -41,7 +43,7 @@ const styles = theme => ({
             fontSize: '1.300em',
         },
     },
-    subText :{
+    subText: {
         marginTop: 10,
         [theme.breakpoints.up(557)]: {
             fontSize: '1.2000em',
@@ -56,33 +58,48 @@ const styles = theme => ({
     }
 });
 
-function MediaControlCard(props) {
-    const { classes, theme } = props;
+class DealItem extends Component {
+    state = {
+        toDetails: false
+    }
 
-    return (
-        <ListItem classes={{ root: classes.listItem }}>
-            <Card className={classes.card} raised>
-                <CardActionArea onClick={props.clicked}>
-                    <CardContent classes={{ root: classes.details }}>
-                        <CardMedia
-                            className={classes.logo}
-                            image={Logo}
-                            title="Deal Logo"
-                        />
-                        <div style={{flexDirection: "column", marginLeft: 25}}>
-                        <Typography className={classes.headerText}>
-                            Title
-                        </Typography>
-                        <Typography className={classes.subText}>
-                            I am the subtext
-                        </Typography>
-                        </div>
-                    </CardContent>
-                </CardActionArea>
-            </Card>
-        </ListItem>
+    clicked = (event) => {
+        this.setState({ toDetails: true })
+    }
 
-    );
+
+    render() {
+        const { classes, theme, info } = this.props;
+
+        if(this.state.toDetails) {
+            return <Redirect to={"/user/deals/" + info.id }  />
+        }
+
+        return (
+            <ListItem classes={{ root: classes.listItem }}>
+                <Card className={classes.card} raised>
+                    <CardActionArea onClick={this.clicked}>
+                        <CardContent classes={{ root: classes.details }}>
+                            {/* <CardMedia
+                                className={classes.logo}
+                                image={Logo}
+                                title="Deal Logo"
+                            /> */}
+                            <div style={{ flexDirection: "column", marginLeft: 25 }}>
+                                <Typography className={classes.headerText}>
+                                    {info.title}
+                            </Typography>
+                                <Typography className={classes.subText}>
+                                    {info.subDetails}
+                            </Typography>
+                            </div>
+                        </CardContent>
+                    </CardActionArea>
+                </Card>
+            </ListItem>
+        );
+    }
 }
 
-export default withStyles(styles, { withTheme: true })(MediaControlCard);
+
+export default withStyles(styles, { withTheme: true })(DealItem);
