@@ -104,10 +104,8 @@ const loginUser = payload => (
 
 const getDeals = payload => (
     dispatch => {
-        const accessStr = "Bearer " + sessionStorage.getItem("token") +  " " + sessionStorage.getItem("refreshToken")
-        const reqBody = {
-            refreshToken: sessionStorage.getItem("refreshToken") 
-        }
+        const accessStr = "Bearer " + sessionStorage.getItem("token")
+
         dispatch(reqDeals(payload))
 
         return axios({
