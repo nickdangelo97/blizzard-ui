@@ -179,7 +179,7 @@ app.get('/login', (req, res) => {
             return res.status(401)
                 .append("WWW-Authenticate", "xBasic realm=User Page")
                 .json({
-                    message: "Credentials incorrect or not found"
+                    message: err.message
                 })
         })
 

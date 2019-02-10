@@ -29,7 +29,15 @@ const styles = theme => ({
         fontSize: '16px',
         textDecoration: 'none',
         color: theme.palette.secondary.main
-    }
+    },
+    errorMessage: {
+        [theme.breakpoints.between('md', 'xl')]: {
+            fontSize: '1.225em',
+        },
+        [theme.breakpoints.between(0, 959)]: {
+            fontSize: '0.875em',
+        },
+    },
 })
 
 class LoginForm extends Component {
@@ -94,7 +102,7 @@ class LoginForm extends Component {
                         value={password}
                         autoComplete="current-password"
                     />
-
+                    <Typography className={classes.errorMessage} align="center" color='error'>{this.props.message}</Typography>
                     <Button className={classes.submitButton} type="submit" variant="contained" color="primary" size="small">Submit</Button>
                     <Button className={classes.submitButton} variant="contained" size="small">Clear</Button>
                 </form>
@@ -105,5 +113,5 @@ class LoginForm extends Component {
     }
 }
 
-export default withRouter(connect(state => ({ isAuth: state.rootReducer.isAuth }),
+export default withRouter(connect(state => ({ isAuth: state.rootReducer.isAuth, message: state.rootReducer.message }),
     dispatch => ({ loginUser: credentials => dispatch(loginUser(credentials)) }))(withStyles(styles)(LoginForm)))

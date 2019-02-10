@@ -20,8 +20,8 @@ function rootReducer(state = initalState, action) {
     switch (action.type) {
         case LOGIN_REQUEST:
             return Object.assign({}, state, {
-                isAuth: action.isAuth,
-                isFetching: action.isAuth
+                isAuth: false,
+                isFetching: true
             })
         case LOGIN_SUCCESS:
             return Object.assign({}, state, {

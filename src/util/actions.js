@@ -105,7 +105,7 @@ const loginUser = payload => (
                 dispatch(push("/user/deals"))
             })
             .catch(error => {
-                dispatch(loginError(error))
+                dispatch(loginError(error.response.data.message))
                 sessionStorage.removeItem("token")
             })
     }

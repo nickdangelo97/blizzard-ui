@@ -102,13 +102,13 @@ const login = async (username, password, SECRET1, SECRET2) => {
     })
 
     if (!user) {
-        throw new Error("Credentials not found");
+        throw new Error("Email not found");
     }
 
     const valid = await argon2.verify(user.password, password)
 
     if (!valid)
-        throw new Error("Credentials not found")
+        throw new Error("Credentials incorrect")
 
     const accessToken = await genTokens(user.id, SECRET1, SECRET2)
 
