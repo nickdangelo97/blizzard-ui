@@ -4,7 +4,8 @@ import {
     LOGIN_FAILURE ,
     DEALS_REQUEST,
     DEALS_SUCCESS,
-    DEALS_FAILURE
+    DEALS_FAILURE,
+    LOGOUT_USER
 
 } from './constants'
 
@@ -50,6 +51,12 @@ function rootReducer(state = initalState, action) {
                 message: action.message,
                 isFetching: false
             })
+        case LOGOUT_USER: 
+        return Object.assign({}, state, {
+            message: '',
+            isFetching: false,
+            isAuth: false
+        }) 
         default:
             return state
 

@@ -3,10 +3,11 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import MenuIcon from '@material-ui/icons/Menu';
-
+import Button from '@material-ui/core/Button';
 import Logo from '../../assets/torontoblizzard.png'
 import { IconButton } from '@material-ui/core';
 import { connect } from 'react-redux'
+import { logoutUser } from '../../util/actions';
 
 
 const styles = theme => ({
@@ -25,31 +26,59 @@ const styles = theme => ({
 
   },
   toolbar: {
-    flexDirection: "column",
-    alignItems: "center",
+    minHeight: "auto",
+    position: "absolute",
+    display: "grid",
+    width: "100%",
+    gridTemplateColumns: "50% 50%"
   },
   logo: {
     height: 80,
-    marginTop: -42,
     marginRight: 5,
+    marginTop: 5
   },
+  logoContainer: {
+    width: "100%",
+    height: 80,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center"
+  },
+  logoutButton: {
+    alignSelf: "center",
+    width: 80,
+    justifySelf: "end",
+    marginRight: 25,
+    borderColor: "white"
+  }
 });
 
 function SimpleAppBar(props) {
   const { classes, isAuth } = props;
 
+
+const logout = (event) => {
+  props.logoutUser({})
+}
+
   return (
     <div className={classes.root}>
       <AppBar position="static" className={classes.appbar}>
-        <Toolbar className={classes.toolbar}>
-          <IconButton onClick={props.clicked} color="inherit" style={{ alignSelf: "flex-start", visibility: isAuth ? 'visible' : 'hidden' }}>
+        <div className={classes.logoContainer}>
+          <img src={Logo} className={classes.logo} />
+        </div>
+        <Toolbar disableGutters className={classes.toolbar}>
+          <IconButton onClick={props.clicked} color="inherit" style={{ visibility: isAuth ? 'visible' : 'hidden', width: 25 }}>
             <MenuIcon />
           </IconButton>
-          <img src={Logo} className={classes.logo} />
+          <Button className={classes.logoutButton} onClick={logout} variant="outlined" color="inherit" style={{ visibility: isAuth ? 'visible' : 'hidden' }}>
+            Logout
+          </Button>
         </Toolbar>
       </AppBar>
     </div>
   );
 }
 
-export default connect(state => ({ isAuth: state.rootReducer.isAuth }))(withStyles(styles)(SimpleAppBar));
+export default connect(state => ({ isAuth: state.rootReducer.isAuth }),
+dispatch => ({ logoutUser: payload => dispatch(logoutUser(payload)) }))(withStyles(styles)(SimpleAppBar))

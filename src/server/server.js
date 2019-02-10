@@ -185,8 +185,16 @@ app.get('/login', (req, res) => {
 
 })
 
-app.get('/logout', (req, res) => {
-    return res.status(200)
-        .append("Set-Cookie", "__Secure-Fgp=" + "" + "; SameSite=Strict; HttpOnly; Secure; Expires=Mon, 1 Jan 1900 00:00:01 GMT;")
-        .append("Set-Cookie", "__Secure-RFgp=" + "" + "; SameSite=Strict; HttpOnly; Secure; Expires=Mon, 1 Jan 1900 00:00:01 GMT;");
+app.get('/logoutUser', (req, res) => {
+    let options = {
+        httpOnly: true,
+        sameSite: 'strict',
+        httpOnly: true,
+        // secure: true
+    }
+    //MAKE SURE TO MAKE SECURE
+    res.clearCookie("Fgp")
+    res.clearCookie("RFgp")
+
+    return res.status(200).send();
 })

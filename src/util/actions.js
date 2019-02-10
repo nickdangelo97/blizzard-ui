@@ -5,7 +5,8 @@ import {
     LOGIN_FAILURE ,
     DEALS_REQUEST,
     DEALS_SUCCESS,
-    DEALS_FAILURE
+    DEALS_FAILURE,
+    LOGOUT_USER
 
 } from './constants'
 import { Redirect } from 'react-router'
@@ -73,6 +74,14 @@ const dealsError = message => (
     }
 )
 
+const reqLogOut= payload => (
+    {
+        type: LOGOUT_USER,
+        isFetching: false,
+        isAuth: false
+    }
+)
+
 //dispatch as prop to dispatch multiple actions
 const loginUser = payload => (
     dispatch => {
@@ -124,8 +133,25 @@ const getDeals = payload => (
         })
     }
 )
+
+const logoutUser = payload => (
+    dispatch => {
+        console.log("CALLED")
+        dispatch(reqLogOut(payload))
+
+        return axios.get("/logoutUser")
+        .then(res => {
+            sessionStorage.removeItem("token")
+            dispatch(push("/"))
+        })
+        .catch(err=> {
+
+        })
+    }
+)
 export {
     loginUser,
-    getDeals
+    getDeals, 
+    logoutUser
 }
 
