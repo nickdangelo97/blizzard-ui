@@ -6,6 +6,7 @@ import DealItem from './DealItem/DealItem';
 import DealDetails from './DealDetails/DealDetails';
 import { connect } from 'react-redux'
 import { getDeals } from '../../util/actions'
+import _ from 'lodash'
 
 // const test = [...Array(20).keys()]
 const styles = theme => ({
@@ -43,8 +44,20 @@ class Deals extends Component {
 
     list_items = (items, clicked) => {
         return items.map((item, i) => (
-             <DealItem key={i} info={item} />
+            <DealItem key={i} info={item} />
         ))
+    }
+
+    get_list = (deals, classes) => {
+        if (!_.isEmpty(deals))
+            return (
+                <List className={classes.list} style={{ display: this.state.showDetails ? "none" : "block", }}>
+                    {this.list_items(this.props.deals)}
+                </List>
+            )
+
+        return (<Typography align="center" className={classes.headerText}>There are no deals currently available! Check back soon!</Typography>)
+
     }
 
 
@@ -52,6 +65,7 @@ class Deals extends Component {
         const { classes } = this.props
         return (
             <div className={classes.root}>
+
 
                 <div className={classes.content} >
                     <Typography align="left"
@@ -69,9 +83,7 @@ class Deals extends Component {
                         }}
                     />
 
-                    <List className={classes.list} style={{ display: this.state.showDetails ? "none" : "block", }}>
-                        {this.list_items(this.props.deals)}
-                    </List>
+                    {this.get_list(this.props.deals, classes)}
                 </div>
             </div>
         )
@@ -79,4 +91,4 @@ class Deals extends Component {
 }
 
 export default connect(state => ({ deals: state.rootReducer.deals, isAuth: state.rootReducer.isAuth }),
-dispatch => ({ getDeals: payload => dispatch(getDeals(payload)) }))(withStyles(styles)(Deals));
+    dispatch => ({ getDeals: payload => dispatch(getDeals(payload)) }))(withStyles(styles)(Deals));
