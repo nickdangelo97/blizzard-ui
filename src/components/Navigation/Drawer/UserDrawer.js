@@ -55,6 +55,7 @@ class UserDrawer extends Component {
         anchor="left"
         classes={{ paper: classes.paper }}
         onClose={this.props.closed}
+        onClick={this.props.closed}
       >
         <div className={classes.toolbar} />
         <List>
