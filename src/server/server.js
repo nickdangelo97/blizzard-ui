@@ -70,17 +70,9 @@ app.listen(port, () => {
 const { User, Deals } = require('./sequelize')
 
 User.beforeCreate(user => {
-    return argon2.hash(user.password)
+    return argon2.hash(user.Password)
         .then(hash => {
-            user.password = hash
-        })
-        .catch()
-})
-
-User.beforeCreate(user => {
-    return argon2.hash(user.loyalty)
-        .then(hash => {
-            user.loyalty = hash
+            user.Password = hash
         })
         .catch()
 })
@@ -172,6 +164,7 @@ app.get('/login', (req, res) => {
             return res.status(200)
                 .json({
                     token: value.token,
+                    user: value.user
                 });
 
         })

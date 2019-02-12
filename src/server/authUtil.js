@@ -2,12 +2,12 @@ const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 const { User } = require('./sequelize')
 const argon2 = require('argon2')
+const _ = require('lodash')
 
 
 
 const genRandHash = () => {
     const randfp = crypto.randomBytes(50)
-    console.log("RAND IS ", crypto.createHash('sha256').update(randfp.toString()).digest('hex'))
     return {
         value: Buffer.from(randfp).toString('hex'),
         hash: crypto.createHash('sha256').update(randfp.toString()).digest('hex')
@@ -67,7 +67,6 @@ const refreshToken = async (token, RFgp, SECRET1, SECRET2) => {
         id = user
     }
     catch (e) {
-        console.log("REFRESH ERROR IS ", e)
         return {}
     }
 
@@ -97,23 +96,27 @@ const setTokenResponse = (res, tokens) => {
 const login = async (username, password, SECRET1, SECRET2) => {
     const user = await User.findOne({
         where: {
-            email: username
-        }
+            Email: username
+        },
+        attributes: ['Name', 'Year_of_Birth', 'U', 'Gender', 'Phone', 'Loyalty',
+            'Email', 'Password', 'Address', 'City', 'ProvinceORState', 'ZipORPostal', 'Country']
     })
-
     if (!user) {
         throw new Error("Email not found");
     }
 
-    const valid = await argon2.verify(user.password, password)
+    const valid = await argon2.verify(user.Password, password)
 
     if (!valid)
         throw new Error("Credentials incorrect")
 
     const accessToken = await genTokens(user.id, SECRET1, SECRET2)
 
+    user.Password = undefined
+
     return {
         ...accessToken,
+        user
     }
 }
 

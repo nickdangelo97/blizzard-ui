@@ -1,51 +1,43 @@
 module.exports = (sequelize, type) => {
     return (sequelize.define('user', {
-        loyalty: {
+        Loyalty: {
             type: type.STRING
         }, 
-        yob: {
+        Year_of_Birth: {
             type: type.INTEGER
         },
-        u: {
+        U: {
             type: type.INTEGER
         },
-        name: {
+        Name: {
             type: type.STRING
         },
-        email: {
+        Email: {
             type: type.STRING
         },
-        password: {
+        Password: {
             type: type.STRING
         },
-        address: {
+        Address: {
             type:type.STRING
         },
-        city: {
+        City: {
             type: type.STRING
         },
-        zip: {
+        ZipORPostal: {
             type: type.STRING
         },
-        province: {
+        ProvinceORState: {
             type: type.STRING
         },
-        country : {
+        Country : {
             type: type.STRING
         },
-        phone: {
+        Phone: {
             type: type.INTEGER
         },
-        gender: {
+        Gender: {
             type: type.STRING
         },
-        refreshToken: {
-            type: type.STRING(600)
-        },
-        active: {
-            type: type.BOOLEAN,
-            allowNull: false,
-            defaultValue: false 
-        }
     }))
 }
