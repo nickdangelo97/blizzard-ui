@@ -101,7 +101,7 @@ const loginUser = payload => (
             
         })
             .then(response => {
-                dispatch(recLogin(response))
+                dispatch(recLogin(response.data.user))
                 dispatch(push("/user/deals"))
             })
             .catch(error => {
@@ -136,7 +136,6 @@ const getDeals = payload => (
 
 const logoutUser = payload => (
     dispatch => {
-        console.log("CALLED")
         dispatch(reqLogOut(payload))
 
         return axios.get("/logoutUser")

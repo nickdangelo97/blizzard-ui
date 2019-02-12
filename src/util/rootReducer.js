@@ -10,10 +10,10 @@ import {
 } from './constants'
 
 const initalState = {
-    // isAuth: false,
     isAuth: sessionStorage.getItem("token") ? true : false,
     isFetching: false,
-    deals: []
+    deals: [],
+    user: null
 }
 
 function rootReducer(state = initalState, action) {

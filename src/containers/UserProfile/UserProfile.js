@@ -1,33 +1,24 @@
 import React, { Component } from 'react';
 import { Typography, Card, CardMedia, CardContent, List, ListItem } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import { connect, } from 'react-redux'
+import { Redirect } from 'react-router-dom'
 import customStyles from "../../customStyles";
 import Logo from '../../assets/torontoblizzard.png'
-
-const test = {
-    "loyalty": "123456",
-    "yob": 1997,
-    "u": 18,
-    "name": "I am name",
-    "email": "test@test.com",
-    "password": "1234",
-    "address": "123 test drive",
-    "city": "Hamilton",
-    "zip": "1ae5j7",
-    "province": "On",
-    "county": "Canada",
-    "phone": 1234567890,
-    "gender": "M"
-}
+import { logoutUser } from '../../util/actions';
 
 const styles = theme => ({
     root: {
         ...customStyles.pageCentered,
     },
     content: {
-        flexDirection: "column",
-        justifyContent: 'center',
         width: "100%"
+    },
+    table:{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        marginLeft: "5px"
     },
     logo: {
         maxWidth: 70,
@@ -58,45 +49,66 @@ const styles = theme => ({
 })
 
 class UserProfile extends Component {
+
+    formatKey = (key) => {
+        if(key.includes('_'))
+            return key.split('_').join(' ')
+        
+        if(key.includes('OR'))
+            return key.split('OR').join('/')
+        
+        return key
+    }
+
+
     list_items = (object, bodyClass, listItemClass) => {
         return Object.keys(object).map(key => (
-            <ListItem className={listItemClass} key={key}>
-                <div style={{ display: "flex", flexDirection: "row", width: 300 }}>
-                    <Typography className={bodyClass} style={{ fontWeight: "bold", width: "150px" }}>{key}:</Typography>
-                    <Typography className={bodyClass}>{object[key]}</Typography>
-                </div>
-            </ListItem>
+            <tr key={key} style={{height: 35}}>
+                <td><Typography className={bodyClass} style={{ fontWeight: "bold", width: "150px" }}>{this.formatKey(key)}:</Typography></td>
+                <td><Typography className={bodyClass}>{object[key]}</Typography></td>
+            </tr>
+                    
         ))
     }
 
     render() {
-        const { classes } = this.props
-
-        return (
-            <div className={classes.root}>
-                <div className={classes.content}>
-                    <Typography
-                        align="left"
-                        className={classes.headerText}
-                        style={{ fontWeight: 500 }}>
-                        Name
-                    </Typography>
-                    {/* <img src={Logo} className={classes.logo} /> */}
-                    <hr
-                        style={{
-                            color: "#D3D3D3",
-                            backgroundColor: "#D3D3D3",
-                            height: 0.1,
-                            width: "100%"
-                        }}
-                    />
-                    <List>
-                        {this.list_items(test, classes.bodyText, classes.listItem)}
-                    </List>
+        const { classes, user } = this.props
+        
+        if(!user) {
+            this.props.logoutUser({}) 
+            return <Redirect to="/" />
+        }
+        else
+            return (
+                <div className={classes.root}>
+                    <div className={classes.content}>
+                        <Typography
+                            align="left"
+                            className={classes.headerText}
+                            style={{ fontWeight: 500 }}>
+                            User Profile
+                        </Typography>
+                        {/* <img src={Logo} className={classes.logo} /> */}
+                        <hr
+                            style={{
+                                color: "#D3D3D3",
+                                backgroundColor: "#D3D3D3",
+                                height: 0.1,
+                                width: "100%"
+                            }}
+                        />
+                        {
+                            <table className={classes.table}>
+                                <tbody>
+                                    {this.list_items(user, classes.bodyText, classes.listItem)}
+                                </tbody>
+                            </table>
+                        }
+                    </div>
                 </div>
-            </div>
         );
     }
 }
 
-export default withStyles(styles)(UserProfile);
+export default connect(state => ({ user: state.rootReducer.user }),
+    dispatch => ({ logoutUser: payload => dispatch(logoutUser(payload)) }))(withStyles(styles)(UserProfile))
