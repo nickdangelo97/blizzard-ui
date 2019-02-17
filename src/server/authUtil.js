@@ -88,6 +88,7 @@ const setTokenResponse = (res, tokens) => {
     //MAKE SURE TO MAKE SECURE
     res.cookie("Fgp", tokens.fp.value, options)
     res.cookie("RFgp", tokens.rfp.value, options)
+    res.append("X-Auth-Token", tokens.token)
     // .append("Set-Cookie", "__Secure-Fgp=" + tokens.accessToken.fp.value + "; SameSite=Strict; HttpOnly=falsex; Secure")
     // .append("Set-Cookie", "__Secure-RFgp=" + tokens.refreshToken.fp.value + "; SameSite=Strict; HttpOnly; Secure")
     return res

@@ -1,28 +1,30 @@
 import React from 'react'
-import { 
-    LOGIN_REQUEST, 
-    LOGIN_SUCCESS, 
-    LOGIN_FAILURE ,
+import {
+    LOGIN_REQUEST,
+    LOGIN_SUCCESS,
+    LOGIN_FAILURE,
     DEALS_REQUEST,
     DEALS_SUCCESS,
     DEALS_FAILURE,
     LOGOUT_USER
 
 } from './constants'
-import { Redirect } from 'react-router'
 import { push } from 'connected-react-router'
 import axios from 'axios'
 
 axios.interceptors.response.use((response) => {
-    if(response.data.hasOwnProperty("token"))
-        sessionStorage.setItem("token", response.data.token)
+
+    if (response.headers['x-auth-token'])
+        sessionStorage.setItem("token", response.headers['x-auth-token'])
+
+    if (!sessionStorage.getItem("token"))
+        throw new Error("Server Error")
 
     return response
 },
-(error => {
-    sessionStorage.removeItem("token")
-    return Promise.reject(error)
-}))
+    ((error) => {
+        return Promise.reject(error)
+    }))
 
 const reqLogin = payload => (
     {
@@ -74,11 +76,12 @@ const dealsError = message => (
     }
 )
 
-const reqLogOut= payload => (
+const reqLogOut = message => (
     {
         type: LOGOUT_USER,
         isFetching: false,
-        isAuth: false
+        isAuth: false,
+        message
     }
 )
 
@@ -98,15 +101,14 @@ const loginUser = payload => (
             headers: {
                 crossDomain: true
             }
-            
+
         })
             .then(response => {
                 dispatch(recLogin(response.data.user))
                 dispatch(push("/user/deals"))
             })
             .catch(error => {
-                dispatch(loginError(error.response.data.message))
-                sessionStorage.removeItem("token")
+                dispatch(logoutUser(error.response ? error.response.data.message : error.message))
             })
     }
 )
@@ -124,13 +126,12 @@ const getDeals = payload => (
                 Authorization: accessStr,
             }
         })
-
-        .then(res => {
-            dispatch(recDeals(res.data.dealsList))
-        })
-        .catch(err => {
-            dispatch(dealsError(err))
-        })
+            .then(res => {
+                dispatch(recDeals(res.data.dealsList))
+            })
+            .catch(error => {
+                dispatch(logoutUser(error.response ? error.response.data.message : error.message))
+            })
     }
 )
 
@@ -139,18 +140,18 @@ const logoutUser = payload => (
         dispatch(reqLogOut(payload))
 
         return axios.get("/logoutUser")
-        .then(res => {
-            sessionStorage.removeItem("token")
-            dispatch(push("/"))
-        })
-        .catch(err=> {
+            .then(res => {
+                sessionStorage.removeItem("token")
+                dispatch(push("/"))
+            })
+            .catch(err => {
 
-        })
+            })
     }
 )
 export {
     loginUser,
-    getDeals, 
+    getDeals,
     logoutUser
 }
 

@@ -28,12 +28,13 @@ app.use(
 );
 
 const mw = async (req, res, next) => {
+    //auth for protected db routes
     if (req.headers.authorization === undefined) 
         return next()
 
     if (_.includes(req.headers.authorization, "Basic")) 
         return next()
-    
+
     const accessToken = req.headers.authorization.split(" ")[1]
 
     const { Fgp, RFgp } = req.cookies
@@ -54,7 +55,6 @@ const mw = async (req, res, next) => {
             return res.status(401).send();
 
         setTokenResponse(res, refreshedTokens)
-        res.locals.newToken = refreshedTokens.token
     }
     next()
 }
@@ -120,7 +120,7 @@ app.get('/getDeals', (req, res) => {
     })
         .then(list => {
             let deals = []
-            _.forEach(list, (deal) => {
+            _.forEach(list, (deal) => {     
                 deals.push(deal.dataValues)
 
             })
@@ -133,7 +133,10 @@ app.get('/getDeals', (req, res) => {
         }
         )
         .catch(err => {
-            return res.status(500);
+            return res.status(500)
+            .json({
+                message: err.message
+            });
         })
 
 });
@@ -161,17 +164,14 @@ app.get('/login', (req, res) => {
     login(username, password, a_secret, r_secret)
         .then(value => {
             setTokenResponse(res, value)
-            return res.status(200)
-                .json({
-                    token: value.token,
-                    user: value.user
-                });
+            return res.status(200).send()
 
         })
         .catch(err => {
+            console.log(err)
             return res.status(401)
                 .append("WWW-Authenticate", "xBasic realm=User Page")
-                .json({
+                .send({
                     message: err.message
                 })
         })

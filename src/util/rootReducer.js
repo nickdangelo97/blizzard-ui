@@ -10,7 +10,7 @@ import {
 } from './constants'
 
 const initalState = {
-    isAuth: sessionStorage.getItem("token") ? true : false,
+    isAuth: !(sessionStorage.getItem("token") === null),
     isFetching: false,
     deals: [],
     user: null
@@ -27,7 +27,7 @@ function rootReducer(state = initalState, action) {
             return Object.assign({}, state, {
                 user: action.user,
                 message: '',
-                isAuth: true,
+                isAuth: !(sessionStorage.getItem("token") === null),
                 isFetching: false
             })
         case LOGIN_FAILURE:
@@ -53,7 +53,7 @@ function rootReducer(state = initalState, action) {
             })
         case LOGOUT_USER: 
         return Object.assign({}, state, {
-            message: '',
+            message: action.message,
             isFetching: false,
             isAuth: false
         }) 
