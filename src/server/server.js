@@ -40,14 +40,26 @@ const mw = async (req, res, next) => {
     const { Fgp, RFgp } = req.cookies
 
     try {
-        const { userFP, user } = jwt.verify(accessToken, a_secret, {
+        const { userFP, userID } = jwt.verify(accessToken, a_secret, {
             algorithms: ['HS256'],
             userFP: crypto.createHash('sha256').update(Buffer.from(Fgp, 'hex').toString()).digest('hex')
         })
+
+        const user = await User.findOne({
+            where: {
+               id: userID
+            },
+        })
+    
+        if (!user)
+            throw new Error("User not found");
     }
     catch (e) {
-        if (!(_.isEqual(e.name, "TokenExpiredError"))) 
-            return res.status(401).send();
+        if (!(_.isEqual(e.name, "TokenExpiredError")))
+            return res.status(401)
+            .send({
+                message: e.message
+            });
 
         const refreshedTokens = await refreshToken(accessToken, RFgp, a_secret, r_secret)
         
