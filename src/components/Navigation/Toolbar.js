@@ -34,7 +34,6 @@ const styles = theme => ({
   },
   logo: {
     height: 80,
-    marginRight: 5,
     marginTop: 5
   },
   logoContainer: {
