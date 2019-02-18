@@ -6,6 +6,7 @@ import { Redirect } from 'react-router-dom'
 import customStyles from "../../customStyles";
 import Logo from '../../assets/torontoblizzard.png'
 import { logoutUser } from '../../util/actions';
+import axios from 'axios'
 
 const styles = theme => ({
     root: {
@@ -14,11 +15,10 @@ const styles = theme => ({
     content: {
         width: "100%"
     },
-    table:{
+    table: {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        marginLeft: "5px"
     },
     logo: {
         maxWidth: 70,
@@ -49,66 +49,77 @@ const styles = theme => ({
 })
 
 class UserProfile extends Component {
+    state = {
+        user: {}
+    }
 
     formatKey = (key) => {
-        if(key.includes('_'))
+        if (key.includes('_'))
             return key.split('_').join(' ')
-        
-        if(key.includes('OR'))
+
+        if (key.includes('OR'))
             return key.split('OR').join('/')
-        
+
         return key
     }
 
 
     list_items = (object, bodyClass, listItemClass) => {
         return Object.keys(object).map(key => (
-            <tr key={key} style={{height: 35}}>
+            <tr key={key} style={{ height: 35 }}>
                 <td><Typography className={bodyClass} style={{ fontWeight: "bold", width: "150px" }}>{this.formatKey(key)}:</Typography></td>
-                <td><Typography className={bodyClass}>{object[key]}</Typography></td>
+                <td><Typography className={bodyClass} style={{ textAlign: 'center' }}>{object[key]}</Typography></td>
             </tr>
-                    
+
         ))
     }
 
+    componentDidMount() {
+        const accessStr = "Bearer " + sessionStorage.getItem("token")
+
+        axios({
+            method: 'get',
+            url: "/getUser",
+            headers: {
+                Authorization: accessStr,
+            }
+        })
+            .then(res => {
+                this.setState({ user: res.data })
+            })
+    }
+
     render() {
-        const { classes, user } = this.props
-        
-        if(!user) {
-            this.props.logoutUser({}) 
-            return <Redirect to="/" />
-        }
-        else
-            return (
-                <div className={classes.root}>
-                    <div className={classes.content}>
-                        <Typography
-                            align="left"
-                            className={classes.headerText}
-                            style={{ fontWeight: 500 }}>
-                            User Profile
+        const { classes } = this.props
+
+        return (
+            <div className={classes.root}>
+                <div className={classes.content}>
+                    <Typography
+                        align="left"
+                        className={classes.headerText}
+                        style={{ fontWeight: 500 }}>
+                        User Profile
                         </Typography>
-                        {/* <img src={Logo} className={classes.logo} /> */}
-                        <hr
-                            style={{
-                                color: "#D3D3D3",
-                                backgroundColor: "#D3D3D3",
-                                height: 0.1,
-                                width: "100%"
-                            }}
-                        />
-                        {
-                            <table className={classes.table}>
-                                <tbody>
-                                    {this.list_items(user, classes.bodyText, classes.listItem)}
-                                </tbody>
-                            </table>
-                        }
-                    </div>
+                    <hr
+                        style={{
+                            color: "#D3D3D3",
+                            backgroundColor: "#D3D3D3",
+                            height: 0.1,
+                            width: "100%"
+                        }}
+                    />
+
+                    <table className={classes.table}>
+                        <tbody>
+                            {this.list_items(this.state.user, classes.bodyText, classes.listItem)}
+                        </tbody>
+                    </table>
+
                 </div>
+            </div>
         );
     }
 }
 
-export default connect(state => ({ user: state.rootReducer.user }),
-    dispatch => ({ logoutUser: payload => dispatch(logoutUser(payload)) }))(withStyles(styles)(UserProfile))
+export default (withStyles(styles)(UserProfile))
