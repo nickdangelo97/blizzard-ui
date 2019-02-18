@@ -1,5 +1,13 @@
+const uuid = require('uuid/v4')
+
 module.exports = (sequelize, type) => {
     return (sequelize.define('user', {
+        id: {
+            allowNull: false,
+            primaryKey: true,
+            type: type.UUID,
+            defaultValue: uuid()
+        },
         Loyalty: {
             type: type.STRING
         }, 

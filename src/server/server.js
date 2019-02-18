@@ -128,18 +128,38 @@ app.get('/getDeals', (req, res) => {
             return res.status(200)
                 .send({
                     dealsList: deals,
-                    token: res.locals.newToken
                 });
         }
         )
         .catch(err => {
             return res.status(500)
-            .json({
+            .send({
                 message: err.message
             });
         })
 
 });
+
+app.get('/getUser', async (req, res) => {
+    const token = req.headers.authorization.split(" ")[1]
+
+    const data = jwt.decode(token)
+
+    const u =  await User.findOne({
+        where: {
+            id: data.userID
+        },
+        attributes: ['Name', 'Year_of_Birth', 'U', 'Gender', 'Phone', 'Loyalty',
+            'Email', 'Address', 'City', 'ProvinceORState', 'ZipORPostal', 'Country']
+    })
+
+    if(!u)
+        return res.status(401).send({
+            message: "User not found"
+        })
+
+    return res.status(200).send(u)
+})
 
 
 app.get('/login', (req, res) => {
@@ -164,7 +184,10 @@ app.get('/login', (req, res) => {
     login(username, password, a_secret, r_secret)
         .then(value => {
             setTokenResponse(res, value)
-            return res.status(200).send()
+            return res.status(200)
+            .send({
+                userID: value.userID
+            })
 
         })
         .catch(err => {

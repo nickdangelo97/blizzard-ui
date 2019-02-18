@@ -15,7 +15,7 @@ const genRandHash = () => {
 }
 
 
-const genTokens = async (userId, SECRET1, SECRET2) => {
+const genTokens = async (userID, SECRET1, SECRET2) => {
     const a_rand = genRandHash()
     const r_rand = genRandHash()
 
@@ -25,7 +25,7 @@ const genTokens = async (userId, SECRET1, SECRET2) => {
                 refreshToken: jwt.sign(
                     {
                         userFP: r_rand.hash,
-                        user: userId
+                        userID: userID
                     },
 
                     SECRET2,
@@ -36,14 +36,14 @@ const genTokens = async (userId, SECRET1, SECRET2) => {
                     }
                 ),
                 userFP: a_rand.hash,
-                user: userId,
+                userID: userID,
             },
 
             SECRET1,
 
             {
                 algorithm: 'HS256',
-                expiresIn: '5s'
+                expiresIn: '1d'
             }
         ),
 
@@ -60,11 +60,9 @@ const refreshToken = async (token, RFgp, SECRET1, SECRET2) => {
     let id = -1
     let { refreshToken } = jwt.decode(token)
 
-
-
     try {
-        let { user } = jwt.verify(refreshToken, SECRET2, { algorithms: ['HS256'], userFP: crypto.createHash('sha256').update(Buffer.from(RFgp, 'hex').toString()).digest('hex') })
-        id = user
+        let { userID } = jwt.verify(refreshToken, SECRET2, { algorithms: ['HS256'], userFP: crypto.createHash('sha256').update(Buffer.from(RFgp, 'hex').toString()).digest('hex') })
+        id = userID
     }
     catch (e) {
         return {}
@@ -99,9 +97,9 @@ const login = async (username, password, SECRET1, SECRET2) => {
         where: {
             Email: username
         },
-        attributes: ['Name', 'Year_of_Birth', 'U', 'Gender', 'Phone', 'Loyalty',
-            'Email', 'Password', 'Address', 'City', 'ProvinceORState', 'ZipORPostal', 'Country']
+        attributes: ['id', 'Password']
     })
+
     if (!user) {
         throw new Error("Email not found");
     }
@@ -113,11 +111,9 @@ const login = async (username, password, SECRET1, SECRET2) => {
 
     const accessToken = await genTokens(user.id, SECRET1, SECRET2)
 
-    user.Password = undefined
-
     return {
         ...accessToken,
-        user
+        userID: user.id
     }
 }
 
