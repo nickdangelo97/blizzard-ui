@@ -118,25 +118,24 @@ app.get('/getDeals', (req, res) => {
     Deals.findAll({
         attributes: ['id', 'title', 'details', 'subDetails']
     })
-        .then(list => {
-            let deals = []
-            _.forEach(list, (deal) => {     
-                deals.push(deal.dataValues)
+    .then(list => {
+        let deals = []
+        _.forEach(list, (deal) => {     
+            deals.push(deal.dataValues)
 
-            })
-
-            return res.status(200)
-                .send({
-                    dealsList: deals,
-                });
-        }
-        )
-        .catch(err => {
-            return res.status(500)
-            .send({
-                message: err.message
-            });
         })
+
+        return res.status(200)
+            .send({
+                dealsList: deals,
+            });
+    })
+    .catch(err => {
+        return res.status(500)
+        .send({
+            message: err.message
+        });
+    })
 
 });
 
@@ -205,7 +204,7 @@ app.get('/logoutUser', (req, res) => {
     let options = {
         httpOnly: true,
         sameSite: 'strict',
-        httpOnly: true,
+        // httpOnly: true,
         // secure: true
     }
     //MAKE SURE TO MAKE SECURE
