@@ -7,6 +7,7 @@ import customStyles from "../../customStyles";
 import Logo from '../../assets/torontoblizzard.png'
 import { logoutUser } from '../../util/actions';
 import axios from 'axios'
+import { getAccessString } from '../../util/util';
 
 const styles = theme => ({
     root: {
@@ -75,18 +76,14 @@ class UserProfile extends Component {
     }
 
     componentDidMount() {
-        const accessStr = "Bearer " + sessionStorage.getItem("token")
-
-        axios({
-            method: 'get',
-            url: "/getUser",
+        axios.get("/getUser", {
             headers: {
-                Authorization: accessStr,
+                Authorization: getAccessString()
             }
         })
-            .then(res => {
-                this.setState({ user: res.data })
-            })
+        .then(res => {
+            this.setState({ user: res.data })
+        })
     }
 
     render() {

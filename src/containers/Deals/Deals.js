@@ -5,8 +5,10 @@ import { withStyles } from '@material-ui/core/styles';
 import DealItem from './DealItem/DealItem';
 import DealDetails from './DealDetails/DealDetails';
 import { connect } from 'react-redux'
-import { getDeals } from '../../util/actions'
+import { logoutUser } from '../../util/actions'
 import _ from 'lodash'
+import axios from 'axios'
+import { getAccessString } from '../../util/util';
 
 // const test = [...Array(20).keys()]
 const styles = theme => ({
@@ -36,10 +38,21 @@ const styles = theme => ({
 class Deals extends Component {
     state = {
         showDetails: false,
+        deals: []
     }
 
     componentDidMount() {
-        this.props.getDeals(this.props.isAuth)
+        axios.get('/getDeals', {
+            headers: {
+                Authorization: getAccessString()
+            }
+        })
+            .then(res => {
+                this.setState({ deals: res.data.dealsList })
+            })
+            .catch(err => {
+                this.props.logoutUser(err.response.data.message)
+            })
     }
 
     list_items = (items, clicked) => {
@@ -52,7 +65,7 @@ class Deals extends Component {
         if (!_.isEmpty(deals))
             return (
                 <List className={classes.list} style={{ display: this.state.showDetails ? "none" : "block", }}>
-                    {this.list_items(this.props.deals)}
+                    {this.list_items(deals)}
                 </List>
             )
 
@@ -83,12 +96,11 @@ class Deals extends Component {
                         }}
                     />
 
-                    {this.get_list(this.props.deals, classes)}
+                    {this.get_list(this.state.deals, classes)}
                 </div>
             </div>
         )
     }
 }
 
-export default connect(state => ({ deals: state.rootReducer.deals, isAuth: state.rootReducer.isAuth }),
-    dispatch => ({ getDeals: payload => dispatch(getDeals(payload)) }))(withStyles(styles)(Deals));
+export default connect(null, dispatch => ({ logoutUser: payload => dispatch(logoutUser(payload)) }))(withStyles(styles)(Deals));

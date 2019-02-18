@@ -3,9 +3,6 @@ import {
     LOGIN_REQUEST,
     LOGIN_SUCCESS,
     LOGIN_FAILURE,
-    DEALS_REQUEST,
-    DEALS_SUCCESS,
-    DEALS_FAILURE,
     LOGOUT_USER
 
 } from './constants'
@@ -52,30 +49,6 @@ const loginError = message => (
     }
 )
 
-
-const reqDeals = payload => (
-    {
-        type: DEALS_REQUEST,
-        isFetching: true,
-    }
-)
-
-const recDeals = deals => (
-    {
-        type: DEALS_SUCCESS,
-        isFetching: false,
-        deals
-    }
-)
-
-const dealsError = message => (
-    {
-        type: DEALS_FAILURE,
-        isFetching: false,
-        message
-    }
-)
-
 const reqLogOut = message => (
     {
         type: LOGOUT_USER,
@@ -113,28 +86,6 @@ const loginUser = payload => (
     }
 )
 
-const getDeals = payload => (
-    dispatch => {
-        const accessStr = "Bearer " + sessionStorage.getItem("token")
-
-        dispatch(reqDeals(payload))
-
-        return axios({
-            method: 'get',
-            url: "/getDeals",
-            headers: {
-                Authorization: accessStr,
-            }
-        })
-            .then(res => {
-                dispatch(recDeals(res.data.dealsList))
-            })
-            .catch(error => {
-                dispatch(logoutUser(error.response ? error.response.data.message : error.message))
-            })
-    }
-)
-
 const logoutUser = payload => (
     dispatch => {
         dispatch(reqLogOut(payload))
@@ -145,13 +96,11 @@ const logoutUser = payload => (
                 dispatch(push("/"))
             })
             .catch(err => {
-
             })
     }
 )
 export {
     loginUser,
-    getDeals,
     logoutUser
 }
 
