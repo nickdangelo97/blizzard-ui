@@ -1,8 +1,6 @@
-import React from 'react'
 import {
     LOGIN_REQUEST,
     LOGIN_SUCCESS,
-    LOGIN_FAILURE,
     LOGOUT_USER
 
 } from './constants'
@@ -40,15 +38,6 @@ const recLogin = user => (
     }
 )
 
-const loginError = message => (
-    {
-        type: LOGIN_FAILURE,
-        isFetching: false,
-        isAuth: false,
-        message
-    }
-)
-
 const reqLogOut = message => (
     {
         type: LOGOUT_USER,
@@ -77,7 +66,7 @@ const loginUser = payload => (
 
         })
             .then(response => {
-                dispatch(recLogin(response.data.user))
+                dispatch(recLogin(response.data.userID))
                 dispatch(push("/user/deals"))
             })
             .catch(error => {
@@ -89,7 +78,6 @@ const loginUser = payload => (
 const logoutUser = payload => (
     dispatch => {
         dispatch(reqLogOut(payload))
-
         return axios.get("/logoutUser")
             .then(res => {
                 sessionStorage.removeItem("token")
