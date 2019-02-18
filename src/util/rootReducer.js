@@ -13,7 +13,7 @@ const initalState = {
     isAuth: !(sessionStorage.getItem("token") === null),
     isFetching: false,
     deals: [],
-    user: null
+    userID: null
 }
 
 function rootReducer(state = initalState, action) {
@@ -25,7 +25,7 @@ function rootReducer(state = initalState, action) {
             })
         case LOGIN_SUCCESS:
             return Object.assign({}, state, {
-                user: action.user,
+                userID: action.user,
                 message: '',
                 isAuth: !(sessionStorage.getItem("token") === null),
                 isFetching: false

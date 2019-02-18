@@ -11,11 +11,11 @@ import {
 } from './constants'
 import { push } from 'connected-react-router'
 import axios from 'axios'
+import _ from "lodash"
 
 axios.interceptors.response.use((response) => {
-
-    if (response.headers['x-auth-token'])
-        sessionStorage.setItem("token", response.headers['x-auth-token'])
+    if (_.get(response.headers, "x-auth-token"))
+        sessionStorage.setItem("token", _.get(response.headers, "x-auth-token"))
 
     if (!sessionStorage.getItem("token"))
         throw new Error("Server Error")
