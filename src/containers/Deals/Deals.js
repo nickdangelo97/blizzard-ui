@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Typography, List } from '@material-ui/core';
+import { Typography, List, LinearProgress } from '@material-ui/core';
 import customStyles from "../../customStyles";
 import { withStyles } from '@material-ui/core/styles';
 import DealItem from './DealItem/DealItem';
@@ -38,19 +38,23 @@ const styles = theme => ({
 class Deals extends Component {
     state = {
         showDetails: false,
+        fetchingDeals: false,
         deals: []
     }
 
     componentDidMount() {
+        this.setState({ fetchingDeals: true })
+
         axios.get('/getDeals', {
             headers: {
                 Authorization: getAccessString()
             }
         })
             .then(res => {
-                this.setState({ deals: res.data.dealsList })
+                this.setState({ deals: res.data.dealsList, fetchingDeals: false })
             })
             .catch(err => {
+                this.setState({ fetchingDeals: false })
                 this.props.logoutUser(err.response.data.message)
             })
     }
@@ -62,15 +66,30 @@ class Deals extends Component {
     }
 
     get_list = (deals, classes) => {
-        if (!_.isEmpty(deals))
+        if (_.isEmpty(deals) && !(this.state.fetchingDeals))
+            return (<Typography align="center" className={classes.headerText}>There are no deals currently available! Check back soon!</Typography>)
+        
+        return (
+            <List className={classes.list} style={{ display: this.state.showDetails ? "none" : "block", }}>
+                {this.list_items(deals)}
+            </List>
+        )
+    }
+
+    get_progress = (fetching) => {
+        if (!fetching)
             return (
-                <List className={classes.list} style={{ display: this.state.showDetails ? "none" : "block", }}>
-                    {this.list_items(deals)}
-                </List>
+                <hr
+                    style={{
+                        color: "#D3D3D3",
+                        backgroundColor: "#D3D3D3",
+                        height: 0.1,
+                        width: "100%"
+                    }}
+                />
             )
-
-        return (<Typography align="center" className={classes.headerText}>There are no deals currently available! Check back soon!</Typography>)
-
+        
+        return(<LinearProgress/>)
     }
 
 
@@ -86,15 +105,8 @@ class Deals extends Component {
                         style={{ fontWeight: 500 }}>
                         Current Offers
                     </Typography>
-
-                    <hr
-                        style={{
-                            color: "#D3D3D3",
-                            backgroundColor: "#D3D3D3",
-                            height: 0.1,
-                            width: "100%"
-                        }}
-                    />
+                    
+                    {this.get_progress(this.state.fetchingDeals)}
 
                     {this.get_list(this.state.deals, classes)}
                 </div>
