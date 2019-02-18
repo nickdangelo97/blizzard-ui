@@ -57,7 +57,7 @@ function SimpleAppBar(props) {
 
 
 const logout = (event) => {
-  props.logoutUser({})
+  props.logoutUser('')
 }
 
   return (
