@@ -1,12 +1,14 @@
 import {
     LOGIN_REQUEST,
     LOGIN_SUCCESS,
-    LOGOUT_USER
+    LOGOUT_USER,
+    SET_ACTIVE
 
 } from './constants'
 import { push } from 'connected-react-router'
 import axios from 'axios'
 import _ from "lodash"
+
 
 axios.interceptors.response.use((response) => {
     if (_.get(response.headers, "x-auth-token"))
@@ -21,6 +23,7 @@ axios.interceptors.response.use((response) => {
         return Promise.reject(error)
     }))
 
+
 const reqLogin = payload => (
     {
         type: LOGIN_REQUEST,
@@ -29,14 +32,23 @@ const reqLogin = payload => (
     }
 )
 
-const recLogin = user => (
+
+const recLogin = userID => (
     {
         type: LOGIN_SUCCESS,
         isFetching: false,
         isAuth: true,
-        user
+        userID
     }
 )
+
+const setActive = active => (
+    {
+        type: SET_ACTIVE,
+        active
+    }
+)
+
 
 const reqLogOut = message => (
     {
@@ -67,6 +79,7 @@ const loginUser = payload => (
         })
             .then(response => {
                 dispatch(recLogin(response.data.userID))
+                dispatch(setActive(response.data.active))
                 dispatch(push("/user/deals"))
             })
             .catch(error => {
@@ -74,6 +87,7 @@ const loginUser = payload => (
             })
     }
 )
+
 
 const logoutUser = payload => (
     dispatch => {
@@ -89,6 +103,7 @@ const logoutUser = payload => (
 )
 export {
     loginUser,
-    logoutUser
+    logoutUser,
+    setActive
 }
 

@@ -7,6 +7,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Deals from '../../containers/Deals/Deals';
 import ProtectedRoute from '../..//util/ProtectedRoute';
 import DealDetails from '../../containers/Deals/DealDetails/DealDetails';
+import PasswordDialog from '../../containers/PasswordDialog/PasswordDialog';
+
 
 
 const styles = theme => ({
@@ -31,6 +33,7 @@ class UserPage extends Component {
         
         return (
             <div className={classes.root}>
+            <PasswordDialog />
             <Switch>
                 <Route path= {match.url + "/deals"} exact component={Deals} />
                 <Route path= {match.url + "/profile"} exact component={UserProfile} />
