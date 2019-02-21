@@ -97,7 +97,7 @@ const login = async (username, password, SECRET1, SECRET2) => {
         where: {
             Email: username
         },
-        attributes: ['id', 'Password']
+        attributes: ['id', 'Password', 'active']
     })
 
     if (!user) {
@@ -113,7 +113,8 @@ const login = async (username, password, SECRET1, SECRET2) => {
 
     return {
         ...accessToken,
-        userID: user.id
+        userID: user.id,
+        active: user.active
     }
 }
 

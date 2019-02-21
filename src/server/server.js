@@ -29,10 +29,10 @@ app.use(
 
 const mw = async (req, res, next) => {
     //auth for protected db routes
-    if (req.headers.authorization === undefined) 
+    if (req.headers.authorization === undefined)
         return next()
 
-    if (_.includes(req.headers.authorization, "Basic")) 
+    if (_.includes(req.headers.authorization, "Basic"))
         return next()
 
     const accessToken = req.headers.authorization.split(" ")[1]
@@ -47,23 +47,23 @@ const mw = async (req, res, next) => {
 
         const user = await User.findOne({
             where: {
-               id: userID
+                id: userID
             },
         })
-    
+
         if (!user)
             throw new Error("User not found");
     }
     catch (e) {
         if (!(_.isEqual(e.name, "TokenExpiredError")))
             return res.status(401)
-            .send({
-                message: e.message
-            });
+                .send({
+                    message: e.message
+                });
 
         const refreshedTokens = await refreshToken(accessToken, RFgp, a_secret, r_secret)
-        
-        if(_.isEmpty(refreshedTokens))
+
+        if (_.isEmpty(refreshedTokens))
             return res.status(401).send();
 
         setTokenResponse(res, refreshedTokens)
@@ -130,24 +130,73 @@ app.get('/getDeals', (req, res) => {
     Deals.findAll({
         attributes: ['id', 'title', 'details', 'subDetails']
     })
-    .then(list => {
-        let deals = []
-        _.forEach(list, (deal) => {     
-            deals.push(deal.dataValues)
+        .then(list => {
+            let deals = []
+            _.forEach(list, (deal) => {
+                deals.push(deal.dataValues)
 
+            })
+
+            return res.status(200)
+                .send({
+                    dealsList: deals,
+                });
+        })
+        .catch(err => {
+            return res.status(500)
+                .send({
+                    message: err.message
+                });
         })
 
-        return res.status(200)
+});
+
+app.post('/setPass', async (req, res) => {
+    const credentials = _.get(req.headers, "authorization", null)
+
+    if (!credentials)
+        return res.status(401).append("WWW-Authenticate", "xBasic realm=User Page")
             .send({
-                dealsList: deals,
-            });
-    })
-    .catch(err => {
-        return res.status(500)
-        .send({
-            message: err.message
-        });
-    })
+                message: "Internal Error"
+            })
+
+    let decodedCredentials = Buffer.from(credentials.match(/\b(?!Basic)\b\S+/g)[0], 'base64').toString('ascii');
+
+    if (decodedCredentials === undefined)
+        return res.status(401).append("WWW-Authenticate", "xBasic realm=User Page")
+            .send({
+                message: "Internal Error"
+            })
+
+    let split = decodedCredentials.split(":")
+    let userID = split[0]
+    let newPass = await argon2.hash(split[1])
+
+    if (userID === '-1' || newPass === undefined)
+        return res.status(401).append("WWW-Authenticate", "xBasic realm=User Page")
+            .send({
+                message: "Internal Error"
+            })
+
+    const changed = await User.update(
+        {
+            Password: newPass,
+            active: true
+        },
+        {
+            where: {
+                id: userID
+            }
+        }
+    )
+
+    if (!changed[0])
+        return res.status(500).send({
+            message: "Internal Service Error"
+        })
+
+
+    return res.status(200).send()
 
 });
 
@@ -156,7 +205,7 @@ app.get('/getUser', async (req, res) => {
 
     const data = jwt.decode(token)
 
-    const u =  await User.findOne({
+    const u = await User.findOne({
         where: {
             id: data.userID
         },
@@ -164,7 +213,7 @@ app.get('/getUser', async (req, res) => {
             'Email', 'Address', 'City', 'ProvinceORState', 'ZipORPostal', 'Country']
     })
 
-    if(!u)
+    if (!u)
         return res.status(401).send({
             message: "User not found"
         })
@@ -177,12 +226,18 @@ app.get('/login', (req, res) => {
     const userpass = req.headers.authorization.match(/\b(?!Basic)\b\S+/g)[0]
 
     if (userpass === undefined)
-        return res.status(401).append("WWW-Authenticate", "xBasic realm=User Page").send("Internal Error")
+        return res.status(401).append("WWW-Authenticate", "xBasic realm=User Page")
+            .send({
+                message: "Internal Error"
+            })
 
     let decoded_user_pass = Buffer.from(userpass, 'base64').toString('ascii');
 
     if (decoded_user_pass === undefined)
-        return res.status(401).append("WWW-Authenticate", "xBasic realm=User Page").send("Internal Error")
+        return res.status(401).append("WWW-Authenticate", "xBasic realm=User Page")
+            .send({
+                message: "Internal Error"
+            })
 
     let split = decoded_user_pass.split(':')
 
@@ -190,19 +245,22 @@ app.get('/login', (req, res) => {
     const password = split[1]
 
     if (username === undefined || password === undefined)
-        return res.status(401).append("WWW-Authenticate", "xBasic realm=User Page").send("Internal Error")
+        return res.status(401).append("WWW-Authenticate", "xBasic realm=User Page")
+            .send({
+                message: "Internal Error"
+            })
 
     login(username, password, a_secret, r_secret)
         .then(value => {
             setTokenResponse(res, value)
             return res.status(200)
-            .send({
-                userID: value.userID
-            })
+                .send({
+                    userID: value.userID,
+                    active: value.active
+                })
 
         })
         .catch(err => {
-            console.log(err)
             return res.status(401)
                 .append("WWW-Authenticate", "xBasic realm=User Page")
                 .send({

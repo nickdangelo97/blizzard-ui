@@ -8,6 +8,9 @@ module.exports = (sequelize, type) => {
             type: type.UUID,
             defaultValue: uuid()
         },
+        active: {
+            type: type.BOOLEAN
+        },
         Loyalty: {
             type: type.STRING
         }, 
