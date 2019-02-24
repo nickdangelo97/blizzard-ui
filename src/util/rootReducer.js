@@ -2,15 +2,15 @@ import {
     LOGIN_REQUEST,
     LOGIN_SUCCESS,
     LOGOUT_USER,
-    SET_ACTIVE
+    SET_ACTIVE,
+    DATA_SET
 
 } from './constants'
 
 const initalState = {
     isAuth: !(sessionStorage.getItem("token") === null),
     isFetching: false,
-    userID: -1,
-    active: false,
+    user: null,
     message: ''
 }
 
@@ -23,20 +23,28 @@ function rootReducer(state = initalState, action) {
                 message: ''
             })
         case LOGIN_SUCCESS:
+            console.log(action)
             return Object.assign({}, state, {
                 isAuth: !(sessionStorage.getItem("token") === null),
                 isFetching: action.isFetching,
-                userID: action.userID,
+                user: action.user,
                 message: ''
+            })
+        case DATA_SET:
+            return Object.assign({}, state, {
+                user: action.user
             })
         case SET_ACTIVE:
             return Object.assign({}, state, {
-                active: action.active
+                user: Object.assign({}, state.user, {
+                    active: action.active
+                })
             })
         case LOGOUT_USER:
             return Object.assign({}, state, {
                 isAuth: action.isAuth,
                 isFetching: action.isFetching,
+                user: {},
                 userID: -1,
                 active: false,
                 message: action.message

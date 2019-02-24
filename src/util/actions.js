@@ -2,12 +2,14 @@ import {
     LOGIN_REQUEST,
     LOGIN_SUCCESS,
     LOGOUT_USER,
+    DATA_SET,
     SET_ACTIVE
 
 } from './constants'
 import { push } from 'connected-react-router'
 import axios from 'axios'
 import _ from "lodash"
+import { getAccessString } from './util';
 
 
 axios.interceptors.response.use((response) => {
@@ -33,12 +35,19 @@ const reqLogin = payload => (
 )
 
 
-const recLogin = userID => (
+const recLogin = user => (
     {
         type: LOGIN_SUCCESS,
         isFetching: false,
         isAuth: true,
-        userID
+        user
+    }
+)
+
+const setData = user => (
+    {
+        type: DATA_SET,
+        user
     }
 )
 
@@ -78,13 +87,28 @@ const loginUser = payload => (
 
         })
             .then(response => {
-                dispatch(recLogin(response.data.userID))
-                dispatch(setActive(response.data.active))
+                dispatch(recLogin(response.data.user))
                 dispatch(push("/user/deals"))
             })
             .catch(error => {
                 dispatch(logoutUser(error.response ? error.response.data.message : error.message))
             })
+    }
+)
+
+const getData = payload => (
+    dispatch => {
+        axios.get("/getUser", {
+            headers: {
+                Authorization: getAccessString()
+            }
+        })
+        .then(res => {
+            dispatch(setData(res.data.user))
+        })
+        .catch(error => {
+            dispatch(logoutUser(error.response ? error.response.data.message : error.message))
+        })
     }
 )
 
@@ -103,7 +127,8 @@ const logoutUser = payload => (
 )
 export {
     loginUser,
-    logoutUser,
-    setActive
+    setActive,
+    getData,
+    logoutUser
 }
 
