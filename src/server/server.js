@@ -169,10 +169,10 @@ app.post('/setPass', async (req, res) => {
             })
 
     let split = decodedCredentials.split(":")
-    let userID = split[0]
+    let email = split[0]
     let newPass = await argon2.hash(split[1])
 
-    if (userID === '-1' || newPass === undefined)
+    if (email === undefined || newPass === undefined)
         return res.status(401).append("WWW-Authenticate", "xBasic realm=User Page")
             .send({
                 message: "Internal Error"
@@ -185,7 +185,7 @@ app.post('/setPass', async (req, res) => {
         },
         {
             where: {
-                id: userID
+                Email: email
             }
         }
     )
@@ -201,7 +201,7 @@ app.post('/setPass', async (req, res) => {
 });
 
 app.get('/getUser', async (req, res) => {
-    const token = req.headers.authorization.split(" ")[1]
+    const token = _.get(req.headers, 'authorization').split(" ")[1]
 
     const data = jwt.decode(token)
 
@@ -209,7 +209,7 @@ app.get('/getUser', async (req, res) => {
         where: {
             id: data.userID
         },
-        attributes: ['Name', 'Year_of_Birth', 'U', 'Gender', 'Phone', 'Loyalty',
+        attributes: ['id', 'active', 'Name', 'Year_of_Birth', 'U', 'Gender', 'Phone', 'Loyalty',
             'Email', 'Address', 'City', 'ProvinceORState', 'ZipORPostal', 'Country']
     })
 
@@ -218,7 +218,9 @@ app.get('/getUser', async (req, res) => {
             message: "User not found"
         })
 
-    return res.status(200).send(u)
+    return res.status(200).send({
+        user: u
+    })
 })
 
 
@@ -255,8 +257,7 @@ app.get('/login', (req, res) => {
             setTokenResponse(res, value)
             return res.status(200)
                 .send({
-                    userID: value.userID,
-                    active: value.active
+                    user: value.user
                 })
 
         })

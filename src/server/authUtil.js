@@ -97,7 +97,8 @@ const login = async (username, password, SECRET1, SECRET2) => {
         where: {
             Email: username
         },
-        attributes: ['id', 'Password', 'active']
+        attributes: ['id', 'Password', 'active', 'Name', 'Year_of_Birth', 'U', 'Gender', 'Phone', 'Loyalty',
+        'Email', 'Address', 'City', 'ProvinceORState', 'ZipORPostal', 'Country']
     })
 
     if (!user) {
@@ -111,10 +112,11 @@ const login = async (username, password, SECRET1, SECRET2) => {
 
     const accessToken = await genTokens(user.id, SECRET1, SECRET2)
 
+    user.Password = undefined
+
     return {
         ...accessToken,
-        userID: user.id,
-        active: user.active
+        user
     }
 }
 
