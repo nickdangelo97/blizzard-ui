@@ -63,7 +63,7 @@ class PasswordDialog extends Component {
             digit: digit
         })
     }
-    
+
 
     onConfirmPassChange = (event) => {
         this.setState({ confirmPass: event.target.value })
@@ -72,34 +72,38 @@ class PasswordDialog extends Component {
 
     onSubmit = (event) => {
         event.preventDefault();
-        this.setState({ confirmed: _.isEqual(this.state.pass, this.state.confirmPass) })
+        this.setState({ confirmed: _.isEqual(this.state.pass, this.state.confirmPass), isSetting: true })
 
-        if (_.isEqual(this.state.pass, this.state.confirmPass)) {
-            this.setState({ isSetting: true })
+        console.log(this.props.email, this.props.active)
 
-            axios({
-                url: "/setPass",
-                method: "post",
-                auth: {
-                    username: this.props.userID,
-                    password: this.state.confirmPass
-                }
-            })
-                .then(res => {
-                    this.setState({ isSetting: false, set: true })
-                    let timer = setInterval(() => {
-                        if (this.state.timeout === 1) {
-                            clearInterval(timer)
-                            this.props.setActive(true)
-                        }
-
-                        this.setState({ timeout: (this.state.timeout - 1) })
-                    }, 1000)
-                })
-                .catch(err => {
-                    this.props.logoutUser(err.response.data.message)
-                })
+        if (!_.isEqual(this.state.pass, this.state.confirmPass)) {
+            this.setState({ isSetting: false })
+            return;
         }
+
+        axios({
+            url: "/setPass",
+            method: "post",
+            auth: {
+                username: this.props.email,
+                password: this.state.confirmPass
+            }
+        })
+            .then(res => {
+                this.setState({ isSetting: false, set: true })
+                let timer = setInterval(() => {
+                    if (this.state.timeout === 1) {
+                        clearInterval(timer)
+                        this.props.setActive(true)
+                    }
+
+                    this.setState({ timeout: (this.state.timeout - 1) })
+                }, 1000)
+            })
+            .catch(err => {
+                this.props.logoutUser(err.response.data.message)
+            })
+
     }
 
 
@@ -197,5 +201,5 @@ class PasswordDialog extends Component {
 }
 
 
-export default connect(state => ({ userID: state.rootReducer.userID, active: state.rootReducer.active }),
+export default connect(state => ({ email: state.rootReducer.user.Email, active: state.rootReducer.user.active }),
     dispatch => ({ logoutUser: payload => dispatch(logoutUser(payload)), setActive: active => dispatch(setActive(active)) }))(withStyles(styles)(PasswordDialog))

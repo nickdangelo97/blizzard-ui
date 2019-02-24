@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Typography, Card, CardMedia, CardContent, List, ListItem } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { connect, } from 'react-redux'
-import { Redirect } from 'react-router-dom'
+
 import customStyles from "../../customStyles";
 import Logo from '../../assets/torontoblizzard.png'
 import { logoutUser } from '../../util/actions';
@@ -50,10 +50,7 @@ const styles = theme => ({
 })
 
 class UserProfile extends Component {
-    state = {
-        user: {}
-    }
-
+    
     formatKey = (key) => {
         if (key.includes('_'))
             return key.split('_').join(' ')
@@ -66,28 +63,16 @@ class UserProfile extends Component {
 
 
     list_items = (object, bodyClass, listItemClass) => {
-        return Object.keys(object).map(key => (
+        return Object.keys(object).filter(key => key.charAt(0) !== key.charAt(0).toLowerCase()).map(key => (
             <tr key={key} style={{ height: 35 }}>
                 <td><Typography className={bodyClass} style={{ fontWeight: "bold", width: "150px" }}>{this.formatKey(key)}:</Typography></td>
                 <td><Typography className={bodyClass} style={{ textAlign: 'center' }}>{object[key]}</Typography></td>
             </tr>
-
         ))
     }
 
-    componentDidMount() {
-        axios.get("/getUser", {
-            headers: {
-                Authorization: getAccessString()
-            }
-        })
-        .then(res => {
-            this.setState({ user: res.data })
-        })
-    }
-
     render() {
-        const { classes } = this.props
+        const { classes, user } = this.props
 
         return (
             <div className={classes.root}>
@@ -109,7 +94,7 @@ class UserProfile extends Component {
 
                     <table className={classes.table}>
                         <tbody>
-                            {this.list_items(this.state.user, classes.bodyText, classes.listItem)}
+                            {this.list_items(user, classes.bodyText, classes.listItem)}
                         </tbody>
                     </table>
 
@@ -119,4 +104,4 @@ class UserProfile extends Component {
     }
 }
 
-export default (withStyles(styles)(UserProfile))
+export default connect(state => ({ user: state.rootReducer.user }))(withStyles(styles)(UserProfile))
