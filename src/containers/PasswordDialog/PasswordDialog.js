@@ -189,9 +189,9 @@ class PasswordDialog extends Component {
                             Password Set! Closing in {this.state.timeout}
                         </Typography>
                         <DialogActions>
-                            <Button variant="outlined" color="secondary" type="submit" disabled={!(this.state.length && this.state.digit && this.state.upper && !this.state.set)}>
+                            <Button variant="contained" color="secondary" type="submit" disabled={!(this.state.length && this.state.digit && this.state.upper && !this.state.set)}>
                                 Submit new password!
-                        </Button>
+                            </Button>
                         </DialogActions>
                     </form>
                 </DialogContent>
