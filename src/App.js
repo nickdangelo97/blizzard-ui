@@ -12,6 +12,8 @@ import theme from './theme';
 import ProtectedRoute from './util/ProtectedRoute';
 import UserPage from './components/UserPage/UserPage';
 import { getData } from './util/actions';
+import TestComponent from './containers/LoginForm/TestComponent';
+
 
 
 
@@ -43,7 +45,7 @@ class App extends Component {
         <MuiThemeProvider theme={theme}>
           <Layout>
             <Switch>
-              <Route path="/" exact component={LoginPage} />
+              <Route path="/"  component={LoginPage} />
               <ProtectedRoute path="/user" component={UserPage} />
             </Switch>
           </Layout>

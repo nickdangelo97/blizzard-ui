@@ -53,6 +53,8 @@ const styles = theme => ({
 const LoginPage = (props) => {
     const { classes } = props
 
+    console.log(props)
+
     return (
         <div className={classes.root}>
 
@@ -73,7 +75,7 @@ const LoginPage = (props) => {
 
                     </div>
 
-                    <LoginForm />
+                    <LoginForm {...props}/>
 
                 </CardContent>
             </Card>
