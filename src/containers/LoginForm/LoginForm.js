@@ -3,8 +3,12 @@ import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import FormTextField from '../../components/FormTextField/FormTextField';
-import { withRouter } from "react-router-dom";
+import Link from '@material-ui/core/Link';
+import Slide from '@material-ui/core/Slide';
+import TextField from '@material-ui/core/TextField';
+import { withRouter, Route } from "react-router-dom";
 import { connect } from 'react-redux'
+
 import { loginUser } from '../../util/actions'
 
 
@@ -38,12 +42,27 @@ const styles = theme => ({
             fontSize: '0.875em',
         },
     },
+
+    cssLabel: {
+        '&$cssFocused': {
+            color: theme.palette.secondary.main,
+        },
+    },
+    cssFocused: {},
+    cssOutlinedInput: {
+        '&$cssFocused $notchedOutline': {
+            borderColor: theme.palette.secondary.main,
+        },
+    },
+    notchedOutline: {},
 })
 
 class LoginForm extends Component {
     state = {
         email: '',
         password: '',
+        resetEmail: '',
+        resetPassword: false,
         emailInvalid: false
     }
 
@@ -72,9 +91,52 @@ class LoginForm extends Component {
         this.props.loginUser({ email: this.state.email, password: this.state.password })
     }
 
+    onReset = (event) => {
+        this.props.history.push('/reset')
+        this.setState({ resetPassword: true })
+    }
+
     render() {
         const { email, emailInvalid, password } = this.state
         const { classes } = this.props
+
+        if (this.state.resetPassword) {
+            return (
+                <Slide direction="left" in={this.state.resetPassword} mountOnEnter unmountOnExit>
+                    <div>
+                        <Typography variant="subheading" gutterBottom>Please enter your email below. A reset password email will be sent to you!</Typography>
+                        <form className={classes.form}>
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="email"
+                                label="Email"
+                                autoComplete="email"
+                                type="email"
+                                variant="outlined"
+                                // error={!this.state.confirmed}
+                                // onChange={this.onPassChange}
+                                fullWidth
+                                required
+                                InputLabelProps={{
+                                    classes: {
+                                        root: classes.cssLabel,
+                                        focused: classes.cssFocused,
+                                    },
+                                }}
+                                InputProps={{
+                                    classes: {
+                                        root: classes.cssOutlinedInput,
+                                        focused: classes.cssFocused,
+                                        notchedOutline: classes.notchedOutline,
+                                    },
+                                }}
+                            />
+                        </form>
+                    </div>
+                </Slide>
+            )
+        }
 
         return (
             <>
@@ -102,9 +164,9 @@ class LoginForm extends Component {
                         value={password}
                         autoComplete="current-password"
                     />
-                    <Typography className={classes.errorMessage} align="center" color='error'>{this.props.message}</Typography>
-                    <Button className={classes.submitButton} type="submit" variant="contained" color="primary" size="small">Submit</Button>
-                    <Button className={classes.submitButton} variant="contained" size="small">Clear</Button>
+                    <Typography className={classes.errorMessage} align="center" color='error' gutterBottom>{this.props.message}</Typography>
+                    <Link align="center" color="secondary" onClick={this.onReset}>Forgot password? Click here to reset!</Link>
+                    <Button className={classes.submitButton} type="submit" variant="contained" color="secondary" size="small">Login</Button>
                 </form>
             </>
 
