@@ -45,7 +45,7 @@ module.exports = (sequelize, type) => {
             type: type.STRING
         },
         Phone: {
-            type: type.INTEGER
+            type: type.STRING
         },
         Gender: {
             type: type.STRING
