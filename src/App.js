@@ -12,9 +12,6 @@ import theme from './theme';
 import ProtectedRoute from './util/ProtectedRoute';
 import UserPage from './components/UserPage/UserPage';
 import { getData } from './util/actions';
-import TestComponent from './containers/LoginForm/TestComponent';
-
-
 
 
 class App extends Component {
