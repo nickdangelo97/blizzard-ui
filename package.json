@@ -12,6 +12,7 @@
     "connected-react-router": "^6.3.1",
     "cookie-parser": "^1.4.4",
     "cors": "^2.8.5",
+    "ejs": "^2.6.1",
     "express": "^4.16.4",
     "fetch": "^1.1.0",
     "generate-password": "^1.4.1",
