@@ -10,6 +10,7 @@ import { withRouter, Route, Switch, Link } from "react-router-dom";
 import { connect } from 'react-redux'
 
 import { loginUser } from '../../util/actions'
+import Reset from './Reset';
 
 
 const styles = theme => ({
@@ -102,81 +103,34 @@ class LoginForm extends Component {
 
         return (
             <>
-                <Switch>
-                    <Route path={"/reset"} exact render={(props) => {
-                        return (
-                            // <Slide direction="left" in={this.state.resetPassword} mountOnEnter unmountOnExit>
-                                <div>
-                                    <Typography variant="subheading" gutterBottom>Please enter your email below. A reset password email will be sent to you!</Typography>
-                                    <form className={classes.form}>
-                                        <TextField
-                                            autoFocus
-                                            margin="dense"
-                                            id="email"
-                                            label="Email"
-                                            autoComplete="email"
-                                            type="email"
-                                            variant="outlined"
-                                            // error={!this.state.confirmed}
-                                            // onChange={this.onPassChange}
-                                            fullWidth
-                                            required
-                                            InputLabelProps={{
-                                                classes: {
-                                                    root: classes.cssLabel,
-                                                    focused: classes.cssFocused,
-                                                },
-                                            }}
-                                            InputProps={{
-                                                classes: {
-                                                    root: classes.cssOutlinedInput,
-                                                    focused: classes.cssFocused,
-                                                    notchedOutline: classes.notchedOutline,
-                                                },
-                                            }}
-                                        />
-                                    </form>
-                                </div>
-                            // </Slide>
+                <form className={classes.form} onSubmit={this.onSubmit}>
+                    <FormTextField
+                        id="form email"
+                        className={classes.textInputs}
+                        change={this.emailChange}
+                        error={emailInvalid}
+                        required={this.validations.email.required}
+                        label="Email"
+                        value={email}
+                        autoComplete="email"
+                        helptext="A valid email is required"
+                    />
 
-                        )
-                    }} />
-                    
-                    <Route path={this.props.match.url} render={(props) => (
-                        <>
-                            <form className={classes.form} onSubmit={this.onSubmit}>
-                                <FormTextField
-                                    id="form email"
-                                    className={classes.textInputs}
-                                    change={this.emailChange}
-                                    error={emailInvalid}
-                                    required={this.validations.email.required}
-                                    label="Email"
-                                    value={email}
-                                    autoComplete="email"
-                                    helptext="A valid email is required"
-                                />
-
-                                <FormTextField
-                                    id="form-password"
-                                    className={classes.textInputs}
-                                    label="Password"
-                                    helptext="A password is required to sign in"
-                                    required={this.validations.password.required}
-                                    type="password"
-                                    change={event => { this.setState({ password: event.target.value }) }}
-                                    value={password}
-                                    autoComplete="current-password"
-                                />
-                                <Typography className={classes.errorMessage} align="center" color='error' gutterBottom>{this.props.message}</Typography>
-                                <Link to={this.props.match.url + "reset"} align="center" color="secondary">Forgot password? Click here to reset!</Link>
-                                <Button className={classes.submitButton} type="submit" variant="contained" color="secondary" size="small">Login</Button>
-                            </form>
-                        </>
-                    )} />
-
-                </Switch>
-
+                    <FormTextField
+                        id="form-password"
+                        className={classes.textInputs}
+                        label="Password"
+                        helptext="A password is required to sign in"
+                        required={this.validations.password.required}
+                        type="password"
+                        change={event => { this.setState({ password: event.target.value }) }}
+                        value={password}
+                        autoComplete="current-password"
+                    />
+                    <Typography className={classes.errorMessage} align="center" color='error' gutterBottom>{this.props.message}</Typography>
+                    <Link to={this.props.match.url + "reset"} align="center" color="secondary">Forgot password? Click here to reset!</Link>
+                    <Button className={classes.submitButton} type="submit" variant="contained" color="secondary" size="small">Login</Button>
+                </form>
             </>
         )
     }

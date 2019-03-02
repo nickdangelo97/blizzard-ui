@@ -7,7 +7,9 @@ import Logo from '../../../assets/blizzard.png';
 import customStyles from "../../../customStyles";
 import LoginCard from '../LoginCard/LoginCard';
 import { Card, CardContent, CardMedia } from '@material-ui/core';
+import { withRouter, Route, Switch, Link } from "react-router-dom";
 import { connect } from 'react-redux'
+import Reset from '../../../containers/LoginForm/Reset';
 
 
 const styles = theme => ({
@@ -53,13 +55,11 @@ const styles = theme => ({
 const LoginPage = (props) => {
     const { classes } = props
 
-    console.log(props)
-
     return (
         <div className={classes.root}>
 
             <Card className={classes.card} raised>
-                <LinearProgress style={{ visibility: props.isFetching ? 'visible' : 'hidden'}} />
+                <LinearProgress style={{ visibility: props.isFetching ? 'visible' : 'hidden' }} />
 
                 <CardContent className={classes.cardContent}>
                     <div className={classes.logoContainer}>
@@ -75,7 +75,13 @@ const LoginPage = (props) => {
 
                     </div>
 
-                    <LoginForm {...props}/>
+                    <>
+                        <Switch>
+                            <Route path={"/reset"} exact component={Reset} />
+                            <Route path={props.match.url} render={LoginForm} />
+                        </Switch>
+
+                    </>
 
                 </CardContent>
             </Card>
