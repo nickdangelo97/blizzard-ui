@@ -15,10 +15,7 @@ import { getAccessString } from './util';
 axios.interceptors.response.use((response) => {
     if (_.get(response.headers, "x-auth-token"))
         sessionStorage.setItem("token", _.get(response.headers, "x-auth-token"))
-
-    if (!sessionStorage.getItem("token"))
-        throw new Error("Server Error")
-
+        
     return response
 },
     ((error) => {
