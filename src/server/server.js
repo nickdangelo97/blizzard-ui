@@ -1,5 +1,4 @@
 //express definitions
-const { login, compareCookie, refreshToken, setTokenResponse } = require('./authUtil')
 const express = require('express')
 const multer = require('multer')
 const jwt = require('jsonwebtoken')
@@ -9,6 +8,10 @@ const argon2 = require('argon2')
 const cors = require('cors')
 const _ = require('lodash')
 const crypto = require('crypto')
+const path = require('path');
+
+const { login, genTokens, refreshToken, setTokenResponse } = require('./authUtil')
+const { sendResetLink } = require('./mailer')
 
 
 
@@ -18,6 +21,7 @@ const r_secret = "zfcv6abC0MDpRK8DQ6lj"
 
 const app = express()
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use( express.static("src" + path.sep + "assets") )
 
 
 app.use(
@@ -150,6 +154,41 @@ app.get('/getDeals', (req, res) => {
         })
 
 });
+
+
+app.get('/sendResetLink', async (req, res) => {
+    const credentials = _.get(req.headers, "authorization", null)
+
+    if(!credentials)
+        return res.status(400).send({
+            message: "Invalid Request"
+        }) 
+
+    let decodedCredentials = Buffer.from(credentials.match(/\b(?!Basic)\b\S+/g)[0], 'base64').toString('ascii');
+
+    if (decodedCredentials === undefined)
+        return res.status(400)
+            .send({
+                message: "Internal Error"
+            })
+
+    const u = await User.findOne({
+        where: {
+            Email: decodedCredentials.split(":")[0]
+        },
+    })
+
+    if (!u)
+        return res.status(401).send({
+            message: "User not found"
+        })
+
+    const { token } = await genTokens(u.id, a_secret, r_secret)
+
+    sendResetLink(u.Name,( "http://localhost:3000/reset_pass?token=" + token.token), res)
+    
+})
+
 
 app.post('/setPass', async (req, res) => {
     const credentials = _.get(req.headers, "authorization", null)
