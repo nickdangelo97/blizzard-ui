@@ -116,7 +116,7 @@ const logoutUser = payload => (
         return axios.get("/logoutUser")
             .then(res => {
                 sessionStorage.removeItem("token")
-                dispatch(push("/"))
+                dispatch(push("/login"))
             })
             .catch(err => {
             })

@@ -131,7 +131,7 @@ class Reset extends Component {
                     <Typography variant="subtitle1"
                         align="center"
                         style={{ display: (this.state.success && !this.state.fetching) ? "block" : "none", color: "green" }}>
-                        Email Sent! Please check your email to reset your password. Click <Link to="/">here</Link> to head back to the login page!
+                        Email Sent! Please check your email to reset your password. Click <Link to="/login">here</Link> to head back to the login page!
                     </Typography>
                     <Button className={classes.submitButton} type="submit" variant="contained" color="secondary" size="small">Send Reset Link</Button>
                 </form>

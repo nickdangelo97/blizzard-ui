@@ -77,8 +77,8 @@ const LoginPage = (props) => {
 
                     <>
                         <Switch>
-                            <Route path={"/reset"} exact component={Reset} />
-                            <Route path={props.match.url} render={LoginForm} />
+                            <Route path="/login/reset" component={Reset} />
+                            <Route path="/login" render={LoginForm} />
                         </Switch>
 
                     </>

@@ -23,16 +23,16 @@ class App extends Component {
   }
 
   render() {
-    if(this.props.user === null && sessionStorage.getItem("token")) {
+    if (this.props.user === null && sessionStorage.getItem("token")) {
       return (
         <div className="App">
-        <LoadingOverlay
-          active={true}
-          spinner
-          text="One moment"
-        >
-        <div></div>
-        </LoadingOverlay>
+          <LoadingOverlay
+            active={true}
+            spinner
+            text="One moment"
+          >
+            <div></div>
+          </LoadingOverlay>
         </div>
       );
     }
@@ -42,7 +42,7 @@ class App extends Component {
         <MuiThemeProvider theme={theme}>
           <Layout>
             <Switch>
-              <Route path="/"  component={LoginPage} />
+              <Route path="/login" component={LoginPage} />
               <ProtectedRoute path="/user" component={UserPage} />
             </Switch>
           </Layout>

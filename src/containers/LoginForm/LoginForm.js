@@ -128,7 +128,7 @@ class LoginForm extends Component {
                         autoComplete="current-password"
                     />
                     <Typography className={classes.errorMessage} align="center" color='error' gutterBottom>{this.props.message}</Typography>
-                    <Link to={this.props.match.url + "reset"} align="center" color="secondary">Forgot password? Click here to reset!</Link>
+                    <Link to= "/login/reset" align="center" color="secondary">Forgot password? Click here to reset!</Link>
                     <Button className={classes.submitButton} type="submit" variant="contained" color="secondary" size="small">Login</Button>
                 </form>
             </>

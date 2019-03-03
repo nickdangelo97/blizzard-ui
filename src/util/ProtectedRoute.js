@@ -10,7 +10,7 @@ const ProtectedRoute = ( props) => {
         <Route path={props.path} exact={props.exact} render={(routeProps) => (
             props.isAuth ?
                 <Comp {...routeProps} /> :
-                <Redirect to="/" />
+                <Redirect to="/login" />
         )} />
 
     )
