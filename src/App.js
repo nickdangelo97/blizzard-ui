@@ -12,6 +12,7 @@ import theme from './theme';
 import ProtectedRoute from './util/ProtectedRoute';
 import UserPage from './components/UserPage/UserPage';
 import { getData } from './util/actions';
+import ResetPassPage from './components/ResetPassPage/ResetPassPage';
 
 
 class App extends Component {
@@ -43,6 +44,7 @@ class App extends Component {
           <Layout>
             <Switch>
               <Route path="/login" component={LoginPage} />
+              <Route path="/reset_pass" component={ResetPassPage} />
               <ProtectedRoute path="/user" component={UserPage} />
             </Switch>
           </Layout>
