@@ -126,6 +126,7 @@ export {
     loginUser,
     setActive,
     getData,
+    setData,
     logoutUser
 }
 
