@@ -2,12 +2,9 @@ import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import ListItem from '@material-ui/core/ListItem';
-// import Logo from '../../../assets/fc.png'
 import { CardActionArea } from '@material-ui/core';
-
 import { Redirect } from 'react-router-dom'
 
 const styles = theme => ({

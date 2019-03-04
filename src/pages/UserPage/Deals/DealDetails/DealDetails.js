@@ -3,7 +3,6 @@ import { Typography, IconButton, Icon } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { ArrowBackIos } from '@material-ui/icons'
 import { Slide } from '@material-ui/core';
-// import Logo from '../../../assets/fc.png'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 

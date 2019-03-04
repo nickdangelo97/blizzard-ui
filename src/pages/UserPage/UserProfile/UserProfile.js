@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
-import { Typography, Card, CardMedia, CardContent, List, ListItem } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { connect, } from 'react-redux'
 
-import customStyles from "../../customStyles";
-import Logo from '../../assets/torontoblizzard.png'
-import { logoutUser } from '../../util/actions';
-import axios from 'axios'
-import { getAccessString } from '../../util/util';
+import customStyles from "../../../customStyles";
+
 
 const styles = theme => ({
     root: {

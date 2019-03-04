@@ -1,15 +1,13 @@
 import React, { Component } from 'react'
-import customStyles from "../../customStyles";
 import { Route, Switch, Redirect } from 'react-router'
 import { withRouter } from 'react-router-dom';
-
-
-import UserProfile from '../../containers/UserProfile/UserProfile';
 import { withStyles } from '@material-ui/core/styles';
-import Deals from '../../containers/Deals/Deals';
-import ProtectedRoute from '../..//util/ProtectedRoute';
-import DealDetails from '../../containers/Deals/DealDetails/DealDetails';
-import PasswordDialog from '../../containers/PasswordDialog/PasswordDialog';
+
+import customStyles from '../../customStyles';
+import UserProfile from './UserProfile/UserProfile'
+import Deals from './Deals/Deals';
+import DealDetails from './Deals/DealDetails/DealDetails';
+import PasswordDialog from './PasswordDialog/PasswordDialog';
 
 
 

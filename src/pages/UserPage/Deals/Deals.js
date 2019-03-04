@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { Typography, List, LinearProgress } from '@material-ui/core';
-import customStyles from "../../customStyles";
 import { withStyles } from '@material-ui/core/styles';
-import DealItem from './DealItem/DealItem';
-import DealDetails from './DealDetails/DealDetails';
 import { connect } from 'react-redux'
-import { logoutUser } from '../../util/actions'
 import _ from 'lodash'
 import axios from 'axios'
-import { getAccessString } from '../../util/util';
+
+
+import customStyles from "../../../customStyles";
+import DealItem from './DealItem/DealItem';
+import { logoutUser } from '../../../modules/actions'
+import { getAccessString } from '../../../util/util';
 
 // const test = [...Array(20).keys()]
 const styles = theme => ({
