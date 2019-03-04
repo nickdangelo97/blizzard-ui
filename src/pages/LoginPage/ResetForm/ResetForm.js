@@ -1,9 +1,6 @@
 import React, { Component } from 'react'
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import FormTextField from '../../components/FormTextField/FormTextField';
-// import Link from '@material-ui/core/Link';
-import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import { Link } from "react-router-dom";
@@ -55,7 +52,7 @@ const styles = theme => ({
     notchedOutline: {},
 })
 
-class Reset extends Component {
+class ResetForm extends Component {
     state = {
         email: '',
         msg: '',
@@ -138,4 +135,4 @@ class Reset extends Component {
     }
 }
 
-export default withStyles(styles)(Reset)
+export default withStyles(styles)(ResetForm)

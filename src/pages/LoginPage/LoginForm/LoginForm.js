@@ -2,15 +2,11 @@ import React, { Component } from 'react'
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import FormTextField from '../../components/FormTextField/FormTextField';
-// import Link from '@material-ui/core/Link';
-import Slide from '@material-ui/core/Slide';
-import TextField from '@material-ui/core/TextField';
-import { withRouter, Route, Switch, Link } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import { connect } from 'react-redux'
 
-import { loginUser } from '../../util/actions'
-import Reset from './Reset';
+import { loginUser } from '../../../modules/actions'
+import FormTextField from '../FormTextField/FormTextField';
 
 
 const styles = theme => ({

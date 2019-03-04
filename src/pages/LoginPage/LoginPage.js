@@ -2,14 +2,14 @@ import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import LoginForm from '../../../containers/LoginForm/LoginForm';
-import Logo from '../../../assets/blizzard.png';
-import customStyles from "../../../customStyles";
-import LoginCard from '../LoginCard/LoginCard';
-import { Card, CardContent, CardMedia } from '@material-ui/core';
-import { withRouter, Route, Switch, Link } from "react-router-dom";
+import { Card, CardContent } from '@material-ui/core';
+import { Route, Switch } from "react-router-dom";
 import { connect } from 'react-redux'
-import Reset from '../../../containers/LoginForm/Reset';
+
+import LoginForm from './LoginForm/LoginForm';
+import Logo from '../../assets/blizzard.png';
+import customStyles from "../../customStyles";
+import ResetForm from './ResetForm/ResetForm';
 
 
 const styles = theme => ({
@@ -77,7 +77,7 @@ const LoginPage = (props) => {
 
                     <>
                         <Switch>
-                            <Route path="/login/reset" component={Reset} />
+                            <Route path="/login/reset" component={ResetForm} />
                             <Route path="/login" render={LoginForm} />
                         </Switch>
 
