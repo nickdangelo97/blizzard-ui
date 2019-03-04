@@ -9,7 +9,7 @@ import {
 import { push } from 'connected-react-router'
 import axios from 'axios'
 import _ from "lodash"
-import { getAccessString } from './util';
+import { getAccessString } from '../util/util';
 
 
 axios.interceptors.response.use((response) => {

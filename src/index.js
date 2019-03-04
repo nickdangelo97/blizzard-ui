@@ -3,9 +3,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { BrowserRouter } from 'react-router-dom'
 import { Provider } from "react-redux";
-import store, { history } from './util/store';
+import store, { history } from './store';
 import { ConnectedRouter } from 'connected-react-router'
 
 
