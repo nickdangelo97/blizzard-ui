@@ -3,15 +3,13 @@ import queryString from 'query-string'
 import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux'
 import { withStyles } from '@material-ui/core/styles';
-import { Card, CardContent, CardMedia } from '@material-ui/core';
+import { Card, CardContent } from '@material-ui/core';
 import LoadingOverlay from 'react-loading-overlay';
 import axios from 'axios'
 
-
-
-import PassForm from '../PassForm/PassForm';
-import { setData } from '../../util/actions';
-import customStyles from "../../customStyles";
+import PassForm from '../../components/PassForm/PassForm';
+import { setData } from '../../modules/actions';
+import customStyles from '../../customStyles';
 
 
 const styles = theme => ({

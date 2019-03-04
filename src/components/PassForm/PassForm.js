@@ -8,8 +8,8 @@ import { Redirect } from 'react-router'
 import _ from 'lodash'
 import axios from 'axios'
 
-import PasswordComplexityCheck from '../CreateUser/CreateUserSteppers/PasswordComplexityCheck';
-import { logoutUser, setActive } from '../../util/actions'
+import PasswordComplexityCheck from './PasswordComplexityCheck/PasswordComplexityCheck';
+import { logoutUser, setActive } from '../../modules/actions'
 
 
 const styles = theme => ({
