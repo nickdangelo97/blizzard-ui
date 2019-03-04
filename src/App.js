@@ -6,13 +6,13 @@ import { withRouter } from 'react-router-dom';
 import LoadingOverlay from 'react-loading-overlay';
 
 
-import LoginPage from './components/Login/LoginPage/LoginPage'
-import Layout from './containers/Layout/Layout';
+import LoginPage from './pages/LoginPage/LoginPage'
+import Layout from './Layout/Layout';
 import theme from './theme';
-import ProtectedRoute from './util/ProtectedRoute';
-import UserPage from './components/UserPage/UserPage';
-import { getData } from './util/actions';
-import ResetPassPage from './components/ResetPassPage/ResetPassPage';
+import ProtectedRoute from './modules/ProtectedRoute';
+import UserPage from './pages/UserPage/UserPage';
+import { getData } from './modules/actions';
+import ResetPassPage from './pages/ResetPassPage/ResetPassPage';
 
 
 class App extends Component {
