@@ -9,8 +9,9 @@ const cors = require('cors')
 const _ = require('lodash')
 const crypto = require('crypto')
 const path = require('path');
+const querystring = require('querystring');
 
-const { login, genTokens, refreshToken, setTokenResponse } = require('./authUtil')
+const { login, genTokens, refreshToken, setTokenResponse, genResetToken } = require('./authUtil')
 const { sendResetLink } = require('./mailer')
 
 
@@ -18,6 +19,7 @@ const { sendResetLink } = require('./mailer')
 const port = 8080
 const a_secret = "rcwGtBwUCcOT5sPBUK58"
 const r_secret = "zfcv6abC0MDpRK8DQ6lj"
+const reset_secret = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIjDwvGCsl/WrYN08kw5lI7eBH9e07jX"
 
 const app = express()
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -40,6 +42,19 @@ const mw = async (req, res, next) => {
         return next()
 
     const accessToken = req.headers.authorization.split(" ")[1]
+
+    const reset = jwt.verify(accessToken, reset_secret, {
+        algorithms: ['HS256'],
+    }, (err, decoded) => {
+        if(err) 
+            return false
+
+
+            return true
+    })
+
+    if(reset)
+        return next()
 
     const { Fgp, RFgp } = req.cookies
 
@@ -103,8 +118,6 @@ app.post('/register', (req, res) => {
     //     return res.sendStatus(400).send()
     // }
 
-
-    console.log("BODY IS ", req.body)
 
     User.create(req.body)
         .then(user => res.json(user))
@@ -183,9 +196,26 @@ app.get('/sendResetLink', async (req, res) => {
             message: "User not found"
         })
 
-    const { token } = await genTokens(u.id, a_secret, r_secret)
 
-    sendResetLink(u.Name,( "http://localhost:3000/reset_pass?token=" + token.token), res)
+    const changed = await User.update(
+        {
+            active: false
+        },
+        {
+            where: {
+                id: u.id
+            }
+        }
+    )
+
+    if (!changed[0])
+        return res.status(500).send({
+            message: "Internal Service Error"
+        })
+
+    const t =  await genResetToken(u.id, reset_secret)
+
+    sendResetLink(u.Name, ("http://localhost:3000/reset_pass?" +  querystring.stringify({token: t})), res)
     
 })
 

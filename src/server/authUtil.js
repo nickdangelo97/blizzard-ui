@@ -76,6 +76,19 @@ const refreshToken = async (token, RFgp, SECRET1, SECRET2) => {
 
 }
 
+const genResetToken = async (userID, reset_secret) => {
+    return await jwt.sign(
+        {
+            userID: userID
+        }, 
+        reset_secret,
+        {
+            algorithm: 'HS256',
+            expiresIn: '1d'
+        }
+    )
+}
+
 const setTokenResponse = (res, tokens) => {
     let options = {
         httpOnly: true,
@@ -125,5 +138,6 @@ module.exports = {
     login,
     genTokens,
     refreshToken,
-    setTokenResponse
+    setTokenResponse,
+    genResetToken
 }
