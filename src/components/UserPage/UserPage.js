@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import customStyles from "../../customStyles";
 import { Route, Switch, Redirect } from 'react-router'
+import { withRouter } from 'react-router-dom';
+
 
 import UserProfile from '../../containers/UserProfile/UserProfile';
 import { withStyles } from '@material-ui/core/styles';
@@ -47,4 +49,4 @@ class UserPage extends Component {
 }
 
 
-export default withStyles(styles)(UserPage)
+export default withRouter(withStyles(styles)(UserPage))
