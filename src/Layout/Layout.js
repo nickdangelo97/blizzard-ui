@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import Toolbar from '../../components/Navigation/Toolbar';
 import { withStyles } from '@material-ui/core/styles';
-import UserDrawer from '../../components/Navigation/Drawer/UserDrawer';
+
+import Toolbar from './Toolbar/Toolbar';
+import UserDrawer from './Drawer/UserDrawer';
 
 const styles = {
     main: {
