@@ -2,7 +2,7 @@ import { MuiThemeProvider } from '@material-ui/core';
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 import LoadingOverlay from 'react-loading-overlay';
 
 
@@ -36,6 +36,10 @@ class App extends Component {
           </LoadingOverlay>
         </div>
       );
+    }
+    
+    if(this.props.isAuth && this.props.location.pathname === "/login") {
+      return <Redirect to="/user/deals" />
     }
 
     return (
