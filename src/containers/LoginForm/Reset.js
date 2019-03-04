@@ -79,11 +79,9 @@ class Reset extends Component {
             }
         })
             .then(res => {
-                console.log(res)
-                this.setState({ success: true, fetching: false })
+                this.setState({ success: true, fetching: false, msg: "" })
             })
             .catch(err => {
-                console.log(err)
                 this.setState({ msg: err.response.data.message, fetching: false })
             })
 
