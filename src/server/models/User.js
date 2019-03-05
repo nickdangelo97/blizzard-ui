@@ -11,6 +11,9 @@ module.exports = (sequelize, type) => {
         active: {
             type: type.BOOLEAN
         },
+        type: {
+            type: type.STRING
+        },
         Loyalty: {
             type: type.STRING
         }, 
@@ -24,7 +27,8 @@ module.exports = (sequelize, type) => {
             type: type.STRING
         },
         Email: {
-            type: type.STRING
+            type: type.STRING,
+            unique: true
         },
         Password: {
             type: type.STRING

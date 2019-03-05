@@ -133,11 +133,17 @@ const login = async (username, password, SECRET1, SECRET2) => {
     }
 }
 
+const checkAdmin = (res) => {
+    if(res.locals.user.type !== "admin")
+        return res.sendStatus(403)
+}
+
 
 module.exports = {
     login,
     genTokens,
     refreshToken,
     setTokenResponse,
-    genResetToken
+    genResetToken,
+    checkAdmin
 }

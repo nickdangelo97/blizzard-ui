@@ -11,7 +11,14 @@ const crypto = require('crypto')
 const path = require('path');
 const querystring = require('querystring');
 
-const { login, genTokens, refreshToken, setTokenResponse, genResetToken } = require('./authUtil')
+const
+    {
+        login,
+        refreshToken,
+        setTokenResponse,
+        genResetToken,
+        checkAdmin
+    } = require('./authUtil')
 const { sendResetLink } = require('./mailer')
 
 
@@ -34,10 +41,6 @@ app.use(
 );
 
 const mw = async (req, res, next) => {
-    //auth for protected db routes
-    if (req.headers.authorization === undefined)
-        return next()
-
     if (_.includes(req.headers.authorization, "Basic"))
         return next()
 
@@ -52,7 +55,7 @@ const mw = async (req, res, next) => {
 
             return true
     })
-
+    
     if(reset)
         return next()
 
@@ -64,6 +67,7 @@ const mw = async (req, res, next) => {
             userFP: crypto.createHash('sha256').update(Buffer.from(Fgp, 'hex').toString()).digest('hex')
         })
 
+
         const user = await User.findOne({
             where: {
                 id: userID
@@ -72,6 +76,8 @@ const mw = async (req, res, next) => {
 
         if (!user)
             throw new Error("User not found");
+
+        res.locals.user = user
     }
     catch (e) {
         if (!(_.isEqual(e.name, "TokenExpiredError")))
@@ -106,22 +112,18 @@ User.beforeCreate(user => {
             user.Password = hash
         })
         .catch()
-})
+})  
 
-//auth
 app.post('/register', (req, res) => {
+    checkAdmin(res)
+
     if (_.isEmpty(req.body)) {
         return res.sendStatus(400).send("Invalid body");
     }
 
-    // if(req.body.username === undefined || req.body.password === undefined ) {
-    //     return res.sendStatus(400).send()
-    // }
-
-
     User.create(req.body)
         .then(user => res.json(user))
-        .catch()
+        .catch(err => res.status(500).send("Profile already exists."))
 })
 
 var upload = multer(({ storage: multer.memoryStorage() }))
@@ -131,15 +133,12 @@ var dealsUpload = upload.fields([
     { name: 'subDetails', maxCount: 1 },
 ])
 
-//auth
 app.post('/insertDeals', upload.single('logo'), (req, res) => {
-    const deal = {
-        ...req.body,
-    }
+    checkAdmin(res)
 
-    Deals.create(deal)
+    Deals.create(req.body)
         .then(deal => res.json(deal))
-        .catch()
+        .catch(err => res.status(500).send("Error inserting deal."))
 });
 
 
