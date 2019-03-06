@@ -17,7 +17,8 @@ const
         refreshToken,
         setTokenResponse,
         genResetToken,
-        checkAdmin
+        checkAdmin,
+        getBasicCredentials
     } = require('./authUtil')
 const { sendResetLink } = require('./mailer')
 
@@ -41,6 +42,9 @@ app.use(
 );
 
 const mw = async (req, res, next) => {
+    if(req.headers.authorization === undefined)
+        return res.status(401).send()
+    
     if (_.includes(req.headers.authorization, "Basic"))
         return next()
 
@@ -169,24 +173,11 @@ app.get('/getDeals', (req, res) => {
 
 
 app.get('/sendResetLink', async (req, res) => {
-    const credentials = _.get(req.headers, "authorization", null)
-
-    if(!credentials)
-        return res.status(400).send({
-            message: "Invalid Request"
-        }) 
-
-    let decodedCredentials = Buffer.from(credentials.match(/\b(?!Basic)\b\S+/g)[0], 'base64').toString('ascii');
-
-    if (decodedCredentials === undefined)
-        return res.status(400)
-            .send({
-                message: "Internal Error"
-            })
+    const { email } = getBasicCredentials(req, res)
 
     const u = await User.findOne({
         where: {
-            Email: decodedCredentials.split(":")[0]
+            Email: email
         },
     })
 
@@ -220,35 +211,19 @@ app.get('/sendResetLink', async (req, res) => {
 
 
 app.post('/setPass', async (req, res) => {
-    const credentials = _.get(req.headers, "authorization", null)
+    const { email, password } = getBasicCredentials(req, res)
+    
+    let newPassHash = await argon2.hash(password)
 
-    if (!credentials)
-        return res.status(401).append("WWW-Authenticate", "xBasic realm=User Page")
-            .send({
-                message: "Internal Error"
-            })
-
-    let decodedCredentials = Buffer.from(credentials.match(/\b(?!Basic)\b\S+/g)[0], 'base64').toString('ascii');
-
-    if (decodedCredentials === undefined)
-        return res.status(401).append("WWW-Authenticate", "xBasic realm=User Page")
-            .send({
-                message: "Internal Error"
-            })
-
-    let split = decodedCredentials.split(":")
-    let email = split[0]
-    let newPass = await argon2.hash(split[1])
-
-    if (email === undefined || newPass === undefined)
-        return res.status(401).append("WWW-Authenticate", "xBasic realm=User Page")
+    if (email === undefined || newPassHash === undefined)
+        return res.status(500)
             .send({
                 message: "Internal Error"
             })
 
     const changed = await User.update(
         {
-            Password: newPass,
+            Password: newPassHash,
             active: true
         },
         {
@@ -292,35 +267,10 @@ app.get('/getUser', async (req, res) => {
 })
 
 
-app.get('/login', (req, res) => {
-    const userpass = req.headers.authorization.match(/\b(?!Basic)\b\S+/g)[0]
+app.get('/loginUser', (req, res) => {
+    const { email, password} = getBasicCredentials(req, res)
 
-    if (userpass === undefined)
-        return res.status(401).append("WWW-Authenticate", "xBasic realm=User Page")
-            .send({
-                message: "Internal Error"
-            })
-
-    let decoded_user_pass = Buffer.from(userpass, 'base64').toString('ascii');
-
-    if (decoded_user_pass === undefined)
-        return res.status(401).append("WWW-Authenticate", "xBasic realm=User Page")
-            .send({
-                message: "Internal Error"
-            })
-
-    let split = decoded_user_pass.split(':')
-
-    const username = split[0]
-    const password = split[1]
-
-    if (username === undefined || password === undefined)
-        return res.status(401).append("WWW-Authenticate", "xBasic realm=User Page")
-            .send({
-                message: "Internal Error"
-            })
-
-    login(username, password, a_secret, r_secret)
+    login(email, password, a_secret, r_secret)
         .then(value => {
             setTokenResponse(res, value)
             return res.status(200)
@@ -340,13 +290,6 @@ app.get('/login', (req, res) => {
 })
 
 app.get('/logoutUser', (req, res) => {
-    let options = {
-        httpOnly: true,
-        sameSite: 'strict',
-        // httpOnly: true,
-        // secure: true
-    }
-    //MAKE SURE TO MAKE SECURE
     res.clearCookie("Fgp")
     res.clearCookie("RFgp")
 

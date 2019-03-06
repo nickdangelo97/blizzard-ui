@@ -5,7 +5,6 @@ const argon2 = require('argon2')
 const _ = require('lodash')
 
 
-
 const genRandHash = () => {
     const randfp = crypto.randomBytes(50)
     return {
@@ -56,6 +55,7 @@ const genTokens = async (userID, SECRET1, SECRET2) => {
     }
 }
 
+
 const refreshToken = async (token, RFgp, SECRET1, SECRET2) => {
     let id = -1
     let { refreshToken } = jwt.decode(token)
@@ -76,11 +76,12 @@ const refreshToken = async (token, RFgp, SECRET1, SECRET2) => {
 
 }
 
+
 const genResetToken = async (userID, reset_secret) => {
     return await jwt.sign(
         {
             userID: userID
-        }, 
+        },
         reset_secret,
         {
             algorithm: 'HS256',
@@ -88,6 +89,7 @@ const genResetToken = async (userID, reset_secret) => {
         }
     )
 }
+
 
 const setTokenResponse = (res, tokens) => {
     let options = {
@@ -105,13 +107,14 @@ const setTokenResponse = (res, tokens) => {
     return res
 }
 
-const login = async (username, password, SECRET1, SECRET2) => {
+
+const login = async (email, password, SECRET1, SECRET2) => {
     const user = await User.findOne({
         where: {
-            Email: username
+            Email: email
         },
         attributes: ['id', 'Password', 'active', 'Name', 'Year_of_Birth', 'U', 'Gender', 'Phone', 'Loyalty',
-        'Email', 'Address', 'City', 'ProvinceORState', 'ZipORPostal', 'Country']
+            'Email', 'Address', 'City', 'ProvinceORState', 'ZipORPostal', 'Country']
     })
 
     if (!user) {
@@ -133,10 +136,49 @@ const login = async (username, password, SECRET1, SECRET2) => {
     }
 }
 
+
 const checkAdmin = (res) => {
-    if(res.locals.user.type !== "admin")
+    if (res.locals.user.type !== "admin")
         return res.sendStatus(403)
 }
+
+
+const getBasicCredentials = (req, res) => {
+    console.log(req.headers.authorization)
+    const userpass = req.headers.authorization.match(/\b(?!Basic)\b\S+/g)[0]
+
+    if (userpass === undefined)
+        return res.status(401).append("WWW-Authenticate", "xBasic realm=User Page")
+            .send({
+                message: "Internal Error"
+            })
+
+    let decoded_user_pass = Buffer.from(userpass, 'base64').toString('ascii');
+
+    if (decoded_user_pass === undefined)
+        return res.status(401).append("WWW-Authenticate", "xBasic realm=User Page")
+            .send({
+                message: "Internal Error"
+            })
+
+    let split = decoded_user_pass.split(':')
+
+    const email = split[0]
+    const password = split[1]
+
+    if (email === undefined || password === undefined)
+        return res.status(401).append("WWW-Authenticate", "xBasic realm=User Page")
+            .send({
+                message: "Internal Error"
+            })
+
+    return {
+        email, 
+        password
+    }
+
+}
+
 
 
 module.exports = {
@@ -145,5 +187,6 @@ module.exports = {
     refreshToken,
     setTokenResponse,
     genResetToken,
-    checkAdmin
+    checkAdmin,
+    getBasicCredentials
 }
