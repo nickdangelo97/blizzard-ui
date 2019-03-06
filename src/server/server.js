@@ -7,32 +7,31 @@ const cookieParser = require('cookie-parser')
 const argon2 = require('argon2')
 const cors = require('cors')
 const _ = require('lodash')
-const crypto = require('crypto')
-const path = require('path');
 const querystring = require('querystring');
 
 const
     {
         login,
-        refreshToken,
         setTokenResponse,
         genResetToken,
         checkAdmin,
-        getBasicCredentials
+        a_secret, 
+        r_secret,
+        reset_secret
     } = require('./authUtil')
 const { sendResetLink } = require('./mailer')
+const { auth } = require('./middleware/auth')
 
 
 
 const port = 8080
-const a_secret = "rcwGtBwUCcOT5sPBUK58"
-const r_secret = "zfcv6abC0MDpRK8DQ6lj"
-const reset_secret = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIjDwvGCsl/WrYN08kw5lI7eBH9e07jX"
 
 const app = express()
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use( express.static("src" + path.sep + "assets") )
 
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+app.use((cookieParser()));
+app.use(auth)
 
 app.use(
     cors({
@@ -40,69 +39,6 @@ app.use(
         origin: 'http://localhost:3000',
     })
 );
-
-const mw = async (req, res, next) => {
-    if(req.headers.authorization === undefined)
-        return res.status(401).send()
-    
-    if (_.includes(req.headers.authorization, "Basic"))
-        return next()
-
-    const accessToken = req.headers.authorization.split(" ")[1]
-
-    const reset = jwt.verify(accessToken, reset_secret, {
-        algorithms: ['HS256'],
-    }, (err, decoded) => {
-        if(err) 
-            return false
-
-
-            return true
-    })
-    
-    if(reset)
-        return next()
-
-    const { Fgp, RFgp } = req.cookies
-
-    try {
-        const { userFP, userID } = jwt.verify(accessToken, a_secret, {
-            algorithms: ['HS256'],
-            userFP: crypto.createHash('sha256').update(Buffer.from(Fgp, 'hex').toString()).digest('hex')
-        })
-
-
-        const user = await User.findOne({
-            where: {
-                id: userID
-            },
-        })
-
-        if (!user)
-            throw new Error("User not found");
-
-        res.locals.user = user
-    }
-    catch (e) {
-        if (!(_.isEqual(e.name, "TokenExpiredError")))
-            return res.status(401)
-                .send({
-                    message: e.message
-                });
-
-        const refreshedTokens = await refreshToken(accessToken, RFgp, a_secret, r_secret)
-
-        if (_.isEmpty(refreshedTokens))
-            return res.status(401).send();
-
-        setTokenResponse(res, refreshedTokens)
-    }
-    next()
-}
-
-app.use(bodyParser.json())
-app.use((cookieParser()));
-app.use(mw)
 
 app.listen(port, () => {
     console.log(`Running on http://localhost:${port}`)
@@ -116,9 +52,10 @@ User.beforeCreate(user => {
             user.Password = hash
         })
         .catch()
-})  
+})
 
-app.post('/register', (req, res) => {
+
+app.post('/register', async (req, res) => {
     checkAdmin(res)
 
     if (_.isEmpty(req.body)) {
@@ -127,8 +64,9 @@ app.post('/register', (req, res) => {
 
     User.create(req.body)
         .then(user => res.json(user))
-        .catch(err => res.status(500).send("Profile already exists."))
+        .catch(err => res.status(500).send("Register: Database error."))
 })
+
 
 var upload = multer(({ storage: multer.memoryStorage() }))
 var dealsUpload = upload.fields([
@@ -137,7 +75,8 @@ var dealsUpload = upload.fields([
     { name: 'subDetails', maxCount: 1 },
 ])
 
-app.post('/insertDeals', upload.single('logo'), (req, res) => {
+
+app.post('/insertDeals', upload.single('logo'), async (req, res) => {
     checkAdmin(res)
 
     Deals.create(req.body)
@@ -146,7 +85,7 @@ app.post('/insertDeals', upload.single('logo'), (req, res) => {
 });
 
 
-app.get('/getDeals', (req, res) => {
+app.get('/getDeals', async (req, res) => {
     Deals.findAll({
         attributes: ['id', 'title', 'details', 'subDetails']
     })
@@ -165,7 +104,7 @@ app.get('/getDeals', (req, res) => {
         .catch(err => {
             return res.status(500)
                 .send({
-                    message: err.message
+                    message: "Could not fetch active deals."
                 });
         })
 
@@ -173,7 +112,7 @@ app.get('/getDeals', (req, res) => {
 
 
 app.get('/sendResetLink', async (req, res) => {
-    const { email } = getBasicCredentials(req, res)
+    const email = res.locals.email
 
     const u = await User.findOne({
         where: {
@@ -211,9 +150,9 @@ app.get('/sendResetLink', async (req, res) => {
 
 
 app.post('/setPass', async (req, res) => {
-    const { email, password } = getBasicCredentials(req, res)
+    const email = res.locals.email
     
-    let newPassHash = await argon2.hash(password)
+    let newPassHash = await argon2.hash(res.locals.password)
 
     if (email === undefined || newPassHash === undefined)
         return res.status(500)
@@ -243,6 +182,7 @@ app.post('/setPass', async (req, res) => {
 
 });
 
+
 app.get('/getUser', async (req, res) => {
     const token = _.get(req.headers, 'authorization').split(" ")[1]
 
@@ -267,10 +207,8 @@ app.get('/getUser', async (req, res) => {
 })
 
 
-app.get('/loginUser', (req, res) => {
-    const { email, password} = getBasicCredentials(req, res)
-
-    login(email, password, a_secret, r_secret)
+app.get('/login', async (req, res) => {
+    login(res.locals.email, res.locals.password, a_secret, r_secret)
         .then(value => {
             setTokenResponse(res, value)
             return res.status(200)
@@ -289,7 +227,8 @@ app.get('/loginUser', (req, res) => {
 
 })
 
-app.get('/logoutUser', (req, res) => {
+
+app.get('/logoutUser', async (req, res) => {
     res.clearCookie("Fgp")
     res.clearCookie("RFgp")
 

@@ -5,6 +5,10 @@ const argon2 = require('argon2')
 const _ = require('lodash')
 
 
+const a_secret = "rcwGtBwUCcOT5sPBUK58"
+const r_secret = "zfcv6abC0MDpRK8DQ6lj"
+const reset_secret = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIjDwvGCsl/WrYN08kw5lI7eBH9e07jX"
+
 const genRandHash = () => {
     const randfp = crypto.randomBytes(50)
     return {
@@ -14,7 +18,7 @@ const genRandHash = () => {
 }
 
 
-const genTokens = async (userID, SECRET1, SECRET2) => {
+const genAccessToken = async (userID, SECRET1, SECRET2) => {
     const a_rand = genRandHash()
     const r_rand = genRandHash()
 
@@ -42,7 +46,7 @@ const genTokens = async (userID, SECRET1, SECRET2) => {
 
             {
                 algorithm: 'HS256',
-                expiresIn: '1d'
+                expiresIn: '1m'
             }
         ),
 
@@ -56,7 +60,7 @@ const genTokens = async (userID, SECRET1, SECRET2) => {
 }
 
 
-const refreshToken = async (token, RFgp, SECRET1, SECRET2) => {
+const genRefreshToken = async (token, RFgp, SECRET1, SECRET2) => {
     let id = -1
     let { refreshToken } = jwt.decode(token)
 
@@ -68,7 +72,7 @@ const refreshToken = async (token, RFgp, SECRET1, SECRET2) => {
         return {}
     }
 
-    let newToken = await genTokens(id, SECRET1, SECRET2)
+    let newToken = await genAccessToken(id, SECRET1, SECRET2)
 
     return {
         ...newToken
@@ -103,7 +107,7 @@ const setTokenResponse = (res, tokens) => {
     res.cookie("RFgp", tokens.rfp.value, options)
     res.append("X-Auth-Token", tokens.token)
     // .append("Set-Cookie", "__Secure-Fgp=" + tokens.accessToken.fp.value + "; SameSite=Strict; HttpOnly=falsex; Secure")
-    // .append("Set-Cookie", "__Secure-RFgp=" + tokens.refreshToken.fp.value + "; SameSite=Strict; HttpOnly; Secure")
+    // .append("Set-Cookie", "__Secure-RFgp=" + tokens.genRefreshToken.fp.value + "; SameSite=Strict; HttpOnly; Secure")
     return res
 }
 
@@ -126,7 +130,7 @@ const login = async (email, password, SECRET1, SECRET2) => {
     if (!valid)
         throw new Error("Credentials incorrect")
 
-    const accessToken = await genTokens(user.id, SECRET1, SECRET2)
+    const accessToken = await genAccessToken(user.id, SECRET1, SECRET2)
 
     user.Password = undefined
 
@@ -144,7 +148,6 @@ const checkAdmin = (res) => {
 
 
 const getBasicCredentials = (req, res) => {
-    console.log(req.headers.authorization)
     const userpass = req.headers.authorization.match(/\b(?!Basic)\b\S+/g)[0]
 
     if (userpass === undefined)
@@ -180,13 +183,15 @@ const getBasicCredentials = (req, res) => {
 }
 
 
-
 module.exports = {
     login,
-    genTokens,
-    refreshToken,
+    genAccessToken,
+    genRefreshToken,
     setTokenResponse,
     genResetToken,
     checkAdmin,
-    getBasicCredentials
+    getBasicCredentials,
+    a_secret,
+    r_secret,
+    reset_secret
 }
