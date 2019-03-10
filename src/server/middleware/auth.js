@@ -58,6 +58,8 @@ const auth = async (req, res, next) => {
 
         if (!user)
             throw new Error("Server Error: User not Found");
+
+        res.locals.user = user
     }
     catch (e) {
         if (e.name !== "TokenExpiredError")
