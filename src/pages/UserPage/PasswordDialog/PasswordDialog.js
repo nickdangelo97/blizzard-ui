@@ -3,6 +3,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import _ from 'lodash'
 import { connect } from 'react-redux'
 
@@ -15,21 +16,24 @@ class PasswordDialog extends Component {
     }
 
     render() {
-        const { active } = this.props
+        const { active, settingPass } = this.props
 
         return (
             <Dialog open={!active} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Enter your new password!</DialogTitle>
-                <DialogContent>
-                    <DialogContentText style={{ color: "black", marginBottom: 10 }}>
-                        We provided you a temporary password upon registration. Please enter a new password.
+                <LinearProgress style={{ visibility: settingPass ? 'visible' : 'hidden' }} />
+                <div style={{ pointerEvents: settingPass ? 'none' : 'all', opacity: settingPass ? '0.4' : '1' }}>
+                    <DialogTitle id="form-dialog-title">Enter your new password!</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText style={{ color: "black", marginBottom: 10 }}>
+                            We provided you a temporary password upon registration. Please enter a new password.
                     </DialogContentText>
-                    <PassForm isSetting={this.state.isSetting} />
-                </DialogContent>
+                        <PassForm isSetting={this.state.isSetting} />
+                    </DialogContent>
+                </div>
             </Dialog>
         )
     }
 }
 
 
-export default connect(state => ({ active: state.rootReducer.user.active }))(PasswordDialog)
+export default connect(state => ({ active: state.rootReducer.user.active, settingPass: state.rootReducer.settingPass }))(PasswordDialog)

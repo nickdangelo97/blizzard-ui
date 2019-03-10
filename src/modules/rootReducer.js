@@ -3,6 +3,7 @@ import {
     LOGIN_SUCCESS,
     LOGOUT_USER,
     SET_ACTIVE,
+    SETTING_PASS,
     DATA_SET
 
 } from './constants'
@@ -10,6 +11,7 @@ import {
 const initalState = {
     isAuth: !(sessionStorage.getItem("token") === null),
     isFetching: false,
+    settingPass: false,
     user: null,
     message: ''
 }
@@ -39,6 +41,10 @@ function rootReducer(state = initalState, action) {
                 user: Object.assign({}, state.user, {
                     active: action.active
                 })
+            })
+        case SETTING_PASS:
+            return Object.assign({}, state, {
+                settingPass: action.setting
             })
         case LOGOUT_USER:
             return Object.assign({}, state, {

@@ -4,7 +4,10 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import { Link } from "react-router-dom";
+import { connect } from 'react-redux'
 import axios from 'axios'
+import { settingPass } from '../../../modules/actions'
+
 
 
 const styles = theme => ({
@@ -57,7 +60,6 @@ class ResetForm extends Component {
         email: '',
         msg: '',
         success: false,
-        fetching: false,
     }
 
     onTextChange = (event) => {
@@ -67,7 +69,7 @@ class ResetForm extends Component {
     onSubmit = (event) => {
         event.preventDefault()
 
-        this.setState({ fetching: true })
+        this.props.settingPass(true)
 
         axios.get("/sendResetLink", {
             auth: {
@@ -76,10 +78,12 @@ class ResetForm extends Component {
             }
         })
             .then(res => {
-                this.setState({ success: true, fetching: false, msg: "" })
+                this.props.settingPass(false)
+                this.setState({ success: true, msg: "" })
             })
             .catch(err => {
-                this.setState({ msg: err.response.data.message, fetching: false })
+                this.props.settingPass(false)
+                this.setState({ msg: err.response.data.message })
             })
 
     }
@@ -135,4 +139,4 @@ class ResetForm extends Component {
     }
 }
 
-export default withStyles(styles)(ResetForm)
+export default connect(null, dispatch => ({ settingPass: setting => dispatch(settingPass(setting)) }))(withStyles(styles)(ResetForm))

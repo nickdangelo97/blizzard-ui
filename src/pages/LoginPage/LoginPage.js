@@ -53,15 +53,15 @@ const styles = theme => ({
 })
 
 const LoginPage = (props) => {
-    const { classes } = props
+    const { classes, isFetching, settingPass } = props
 
     return (
         <div className={classes.root}>
 
             <Card className={classes.card} raised>
-                <LinearProgress style={{ visibility: props.isFetching ? 'visible' : 'hidden' }} />
+                <LinearProgress style={{ visibility: (isFetching || settingPass)  ? 'visible' : 'hidden' }} />
 
-                <CardContent className={classes.cardContent}>
+                <CardContent className={classes.cardContent} style={{ pointerEvents: (isFetching || settingPass) ? 'none': 'all', opacity: (isFetching || settingPass) ? '0.4' : '1' }}>
                     <div className={classes.logoContainer}>
 
                         <img src={Logo} className={classes.logo} />
@@ -89,4 +89,4 @@ const LoginPage = (props) => {
     );
 }
 
-export default connect(state => ({ isFetching: state.rootReducer.isFetching }))(withStyles(styles)(LoginPage))
+export default connect(state => ({ isFetching: state.rootReducer.isFetching, settingPass: state.rootReducer.settingPass }))(withStyles(styles)(LoginPage))

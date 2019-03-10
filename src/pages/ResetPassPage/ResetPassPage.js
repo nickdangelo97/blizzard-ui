@@ -4,6 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux'
 import { withStyles } from '@material-ui/core/styles';
 import { Card, CardContent } from '@material-ui/core';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import LoadingOverlay from 'react-loading-overlay';
 import axios from 'axios'
 
@@ -48,7 +49,7 @@ class ResetPassPage extends Component {
 
 
     render() {
-        const { classes } = this.props
+        const { classes, settingPass } = this.props
 
         if (this.props.user === null) {
             return (
@@ -68,7 +69,8 @@ class ResetPassPage extends Component {
         return (
             <div className={classes.root} >
                 <Card className={classes.card} raised>
-                    <CardContent className={classes.cardContent}>
+                <LinearProgress style={{ visibility: settingPass ? 'visible' : 'hidden' }} />
+                    <CardContent className={classes.cardContent} style={{ pointerEvents: settingPass ? 'none' : 'all', opacity: settingPass ? '0.4' : '1' }}>
                         <Typography gutterBottom variant="h5">
                             Reset your passsword below!
                         </Typography>
@@ -82,5 +84,5 @@ class ResetPassPage extends Component {
 }
 
 
-export default connect(state => ({ isAuth: state.rootReducer.isAuth, user: state.rootReducer.user }),
+export default connect(state => ({ isAuth: state.rootReducer.isAuth, user: state.rootReducer.user, settingPass: state.rootReducer.settingPass }),
     dispatch => ({ setData: payload => dispatch(setData(payload)) }))(withStyles(styles)(ResetPassPage))

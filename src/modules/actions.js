@@ -3,7 +3,8 @@ import {
     LOGIN_SUCCESS,
     LOGOUT_USER,
     DATA_SET,
-    SET_ACTIVE
+    SET_ACTIVE,
+    SETTING_PASS
 
 } from './constants'
 import { push } from 'connected-react-router'
@@ -52,6 +53,13 @@ const setActive = active => (
     {
         type: SET_ACTIVE,
         active
+    }
+)
+
+const settingPass = setting => (
+    {
+        type: SETTING_PASS,
+        setting
     }
 )
 
@@ -112,7 +120,7 @@ const getData = payload => (
 
 const logoutUser = payload => (
     dispatch => {
-        dispatch(reqLogOut(payload))
+        dispatch(reqLogOut(payload === undefined ? "Internal Server Error. Site access not avaliable." : payload))
         return axios.get("/logoutUser")
             .then(res => {
                 sessionStorage.removeItem("token")
@@ -127,6 +135,7 @@ export {
     setActive,
     getData,
     setData,
+    settingPass,
     logoutUser
 }
 

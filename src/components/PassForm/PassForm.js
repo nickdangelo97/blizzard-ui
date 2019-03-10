@@ -9,7 +9,7 @@ import _ from 'lodash'
 import axios from 'axios'
 
 import PasswordComplexityCheck from './PasswordComplexityCheck/PasswordComplexityCheck';
-import { logoutUser, setActive } from '../../modules/actions'
+import { logoutUser, setActive, settingPass } from '../../modules/actions'
 
 
 const styles = theme => ({
@@ -67,13 +67,12 @@ class PassForm extends Component {
 
   onSubmit = (event) => {
     event.preventDefault();
-    this.setState({ confirmed: _.isEqual(this.state.pass, this.state.confirmPass), isSetting: true })
+    this.setState({ confirmed: _.isEqual(this.state.pass, this.state.confirmPass) })
 
-    if (!_.isEqual(this.state.pass, this.state.confirmPass)) {
-      this.setState({ isSetting: false })
+    if (!_.isEqual(this.state.pass, this.state.confirmPass))
       return;
-    }
-
+    
+    this.props.settingPass(true)
     axios({
       url: "/setPass",
       method: "post",
@@ -83,7 +82,8 @@ class PassForm extends Component {
       }
     })
       .then(res => {
-        this.setState({ isSetting: false, set: true })
+        this.setState({ set: true })
+        this.props.settingPass(false)
         let timer = setInterval(() => {
           if (this.state.timeout === 1) {
             clearInterval(timer)
@@ -95,6 +95,7 @@ class PassForm extends Component {
         }, 1000)
       })
       .catch(err => {
+        this.props.settingPass(false)
         this.props.logoutUser(err.response.data.message)
       })
 
@@ -182,7 +183,7 @@ class PassForm extends Component {
             Password Set! Redirecting in {this.state.timeout}
           </Typography>
           <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end" }}>
-            <Button variant="contained" color="secondary" type="submit"  disabled={!(this.state.length && this.state.digit && this.state.upper && !this.state.set)}>
+            <Button variant="contained" color="secondary" type="submit" disabled={!(this.state.length && this.state.digit && this.state.upper && !this.state.set)}>
               Submit new password!
             </Button>
           </div>
@@ -193,4 +194,8 @@ class PassForm extends Component {
 }
 
 export default connect(state => ({ email: state.rootReducer.user.Email, active: state.rootReducer.user.active }),
-  dispatch => ({ logoutUser: payload => dispatch(logoutUser(payload)), setActive: active => dispatch(setActive(active)) }))(withStyles(styles)(PassForm))
+  dispatch => ({
+    logoutUser: payload => dispatch(logoutUser(payload)),
+    setActive: active => dispatch(setActive(active)),
+    settingPass: setting => dispatch(settingPass(setting))
+  }))(withStyles(styles)(PassForm))

@@ -11,7 +11,6 @@ import DealItem from './DealItem/DealItem';
 import { logoutUser } from '../../../modules/actions'
 import { getAccessString } from '../../../util/util';
 
-// const test = [...Array(20).keys()]
 const styles = theme => ({
     root: {
         ...customStyles.pageCentered,
@@ -69,9 +68,9 @@ class Deals extends Component {
     get_list = (deals, classes) => {
         if (_.isEmpty(deals) && !(this.state.fetchingDeals))
             return (<Typography align="center" className={classes.headerText}>There are no deals currently available! Check back soon!</Typography>)
-        
+
         return (
-            <List className={classes.list} style={{ display: this.state.showDetails ? "none" : "block", }}>
+            <List className={classes.list}>
                 {this.list_items(deals)}
             </List>
         )
@@ -89,8 +88,8 @@ class Deals extends Component {
                     }}
                 />
             )
-        
-        return(<LinearProgress/>)
+
+        return (<LinearProgress />)
     }
 
 
@@ -100,13 +99,16 @@ class Deals extends Component {
             <div className={classes.root}>
 
 
-                <div className={classes.content} >
+                <div className={classes.content} style={{
+                    display: this.state.showDetails ? "none" : "block",
+                    pointerEvents: this.state.fetchingDeals ? 'none' : 'all', opacity: this.state.fetchingDeals ? '0.4' : '1'
+                }} >
                     <Typography align="left"
                         className={classes.headerText}
                         style={{ fontWeight: 500 }}>
                         Current Offers
                     </Typography>
-                    
+
                     {this.get_progress(this.state.fetchingDeals)}
 
                     {this.get_list(this.state.deals, classes)}
