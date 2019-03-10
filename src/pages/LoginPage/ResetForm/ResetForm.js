@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux'
 import axios from 'axios'
 import { settingPass } from '../../../modules/actions'
+import FormTextField from '../../../components/FormTextField/FormTextField';
 
 
 
@@ -26,33 +26,6 @@ const styles = theme => ({
         width: "80%",
         alignSelf: "center"
     },
-    clickHere: {
-        marginTop: '10px',
-        fontSize: '16px',
-        textDecoration: 'none',
-        color: theme.palette.secondary.main
-    },
-    errorMessage: {
-        [theme.breakpoints.between('md', 'xl')]: {
-            fontSize: '1.225em',
-        },
-        [theme.breakpoints.between(0, 959)]: {
-            fontSize: '0.875em',
-        },
-    },
-
-    cssLabel: {
-        '&$cssFocused': {
-            color: theme.palette.secondary.main,
-        },
-    },
-    cssFocused: {},
-    cssOutlinedInput: {
-        '&$cssFocused $notchedOutline': {
-            borderColor: theme.palette.secondary.main,
-        },
-    },
-    notchedOutline: {},
 })
 
 class ResetForm extends Component {
@@ -92,42 +65,27 @@ class ResetForm extends Component {
 
         return (
             <div>
-                <Typography variant="subheading" gutterBottom>Please enter your email below. A reset password email will be sent to you!</Typography>
+                <Typography variant="subtitle1" gutterBottom>Please enter your email below. A reset password email will be sent to you!</Typography>
                 <form className={classes.form} onSubmit={this.onSubmit}>
-                    <TextField
-                        autoFocus
-                        margin="dense"
+                    <FormTextField
                         id="email"
                         label="Email"
                         autoComplete="email"
                         type="email"
                         variant="outlined"
-                        // error={!this.state.confirmed}
-                        // onChange={this.onPassChange}
-                        fullWidth
-                        required
+                        required={true}
                         onChange={this.onTextChange}
-                        InputLabelProps={{
-                            classes: {
-                                root: classes.cssLabel,
-                                focused: classes.cssFocused,
-                            },
-                        }}
-                        InputProps={{
-                            classes: {
-                                root: classes.cssOutlinedInput,
-                                focused: classes.cssFocused,
-                                notchedOutline: classes.notchedOutline,
-                            },
-                        }}
                     />
-                    <Typography variant="subtitle1"
+
+                    <Typography
+                        variant="subtitle1"
                         align="center"
                         color="error"
                         style={{ display: (this.state.msg !== "") && !this.state.fetching ? "block" : "none" }}>
                         {this.state.msg}
                     </Typography>
-                    <Typography variant="subtitle1"
+                    <Typography
+                        variant="subtitle1"
                         align="center"
                         style={{ display: (this.state.success && !this.state.fetching) ? "block" : "none", color: "green" }}>
                         Email Sent! Please check your email to reset your password. Click <Link to="/login">here</Link> to head back to the login page!

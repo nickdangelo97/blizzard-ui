@@ -25,7 +25,6 @@ function rootReducer(state = initalState, action) {
                 message: ''
             })
         case LOGIN_SUCCESS:
-            console.log(action)
             return Object.assign({}, state, {
                 isAuth: !(sessionStorage.getItem("token") === null),
                 isFetching: action.isFetching,

@@ -10,10 +10,6 @@ import PassForm from '../../../components/PassForm/PassForm';
 
 
 class PasswordDialog extends Component {
-    state = {
-        isSetting: false
-    }
-
     render() {
         const { active, settingPass } = this.props
 
@@ -26,7 +22,7 @@ class PasswordDialog extends Component {
                         <DialogContentText style={{ color: "black", marginBottom: 10 }}>
                             We provided you a temporary password upon registration. Please enter a new password.
                     </DialogContentText>
-                        <PassForm isSetting={this.state.isSetting} />
+                        <PassForm />
                     </DialogContent>
                 </div>
             </Dialog>

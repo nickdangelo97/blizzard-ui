@@ -16,14 +16,6 @@ const styles = theme => ({
     root: {
         ...customStyles.pageCentered
     },
-    title: {
-        [theme.breakpoints.between('md', 'xl')]: {
-            fontSize: '1.225em',
-        },
-        [theme.breakpoints.between(0, 959)]: {
-            fontSize: '0.875em',
-        },
-    },
     card: {
         width: "90%",
         maxWidth: 600,
@@ -59,14 +51,14 @@ const LoginPage = (props) => {
         <div className={classes.root}>
 
             <Card className={classes.card} raised>
-                <LinearProgress style={{ visibility: (isFetching || settingPass)  ? 'visible' : 'hidden' }} />
+                <LinearProgress style={{ visibility: (isFetching || settingPass) ? 'visible' : 'hidden' }} />
 
-                <CardContent className={classes.cardContent} style={{ pointerEvents: (isFetching || settingPass) ? 'none': 'all', opacity: (isFetching || settingPass) ? '0.4' : '1' }}>
+                <CardContent className={classes.cardContent} style={{ pointerEvents: (isFetching || settingPass) ? 'none' : 'all', opacity: (isFetching || settingPass) ? '0.4' : '1' }}>
                     <div className={classes.logoContainer}>
 
                         <img src={Logo} alt="Toronto Blizzard Logo" className={classes.logo} />
                         <Typography
-                            className={classes.title}
+                            variant='h6'
                             align="center"
                             gutterBottom
                             style={{ marginBottom: 25 }}>

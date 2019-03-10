@@ -24,20 +24,10 @@ const styles = theme => ({
     },
     headerText: {
         marginLeft: 20,
-        [theme.breakpoints.up(557)]: {
-            fontSize: '2.500em',
-        },
-        [theme.breakpoints.down(556)]: {
-            fontSize: '1.900em',
-        },
+        fontSize: '2.000em',
     },
     bodyText: {
-        [theme.breakpoints.up(557)]: {
-            fontSize: '1.000em',
-        },
-        [theme.breakpoints.down(556)]: {
-            fontSize: '0.875em',
-        },
+        fontSize: '1.000em',
     },
 
     listItem: {

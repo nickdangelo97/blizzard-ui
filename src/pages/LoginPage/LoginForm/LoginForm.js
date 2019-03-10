@@ -6,7 +6,7 @@ import { withRouter, Link } from "react-router-dom";
 import { connect } from 'react-redux'
 
 import { loginUser } from '../../../modules/actions'
-import FormTextField from '../FormTextField/FormTextField';
+import FormTextField from '../../../components/FormTextField/FormTextField';
 
 
 const styles = theme => ({
@@ -18,40 +18,12 @@ const styles = theme => ({
     },
     textInputs: {
         'margin-top': '5px',
-        'margin-bottom': '15px'
     },
     submitButton: {
         'margin-top': '10px',
         width: "80%",
         alignSelf: "center"
     },
-    clickHere: {
-        marginTop: '10px',
-        fontSize: '16px',
-        textDecoration: 'none',
-        color: theme.palette.secondary.main
-    },
-    errorMessage: {
-        [theme.breakpoints.between('md', 'xl')]: {
-            fontSize: '1.225em',
-        },
-        [theme.breakpoints.between(0, 959)]: {
-            fontSize: '0.875em',
-        },
-    },
-
-    cssLabel: {
-        '&$cssFocused': {
-            color: theme.palette.secondary.main,
-        },
-    },
-    cssFocused: {},
-    cssOutlinedInput: {
-        '&$cssFocused $notchedOutline': {
-            borderColor: theme.palette.secondary.main,
-        },
-    },
-    notchedOutline: {},
 })
 
 class LoginForm extends Component {
@@ -76,7 +48,7 @@ class LoginForm extends Component {
     emailChange = (event) => {
         var re = this.validations.email.regex
         var check = re.test(event.target.value)
-
+        console.log(event.target.value)
         this.setState({
             emailInvalid: !check,
             email: event.target.value
@@ -94,7 +66,7 @@ class LoginForm extends Component {
     }
 
     render() {
-        const { email, emailInvalid, password } = this.state
+        const { emailInvalid} = this.state
         const { classes } = this.props
 
         return (
@@ -102,28 +74,23 @@ class LoginForm extends Component {
                 <form className={classes.form} onSubmit={this.onSubmit}>
                     <FormTextField
                         id="form email"
-                        className={classes.textInputs}
-                        change={this.emailChange}
+                        onChange={this.emailChange}
                         error={emailInvalid}
                         required={this.validations.email.required}
                         label="Email"
-                        value={email}
                         autoComplete="email"
-                        helptext="A valid email is required"
+                        autoFocus={true}
                     />
 
                     <FormTextField
                         id="form-password"
-                        className={classes.textInputs}
                         label="Password"
-                        helptext="A password is required to sign in"
                         required={this.validations.password.required}
                         type="password"
-                        change={event => { this.setState({ password: event.target.value }) }}
-                        value={password}
+                        onChange={event => { this.setState({ password: event.target.value }) }}
                         autoComplete="current-password"
                     />
-                    <Typography className={classes.errorMessage} align="center" color='error' gutterBottom>{this.props.message}</Typography>
+                    <Typography variant="subtitle1" align="center" color='error' gutterBottom>{this.props.message}</Typography>
                     <Link to= "/login/reset" align="center" color="secondary">Forgot password? Click here to reset!</Link>
                     <Button className={classes.submitButton} type="submit" variant="contained" color="secondary" size="small">Login</Button>
                 </form>
