@@ -48,7 +48,6 @@ class LoginForm extends Component {
     emailChange = (event) => {
         var re = this.validations.email.regex
         var check = re.test(event.target.value)
-        console.log(event.target.value)
         this.setState({
             emailInvalid: !check,
             email: event.target.value
