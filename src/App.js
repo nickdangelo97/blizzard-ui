@@ -57,8 +57,6 @@ class App extends Component {
     );
   }
 }
-export default withRouter(
-  connect(state => ({ isAuth: state.rootReducer.isAuth, user: state.rootReducer.user }),
-    dispatch => ({ getData: payload => dispatch(getData(payload)) }))
-    (App)
-);
+
+
+export default withRouter(connect(state => ({ isAuth: state.rootReducer.isAuth, user: state.rootReducer.user }), dispatch => ({ getData: payload => dispatch(getData(payload)) }))(App));

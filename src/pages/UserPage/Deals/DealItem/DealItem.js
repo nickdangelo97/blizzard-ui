@@ -66,7 +66,7 @@ class DealItem extends Component {
 
 
     render() {
-        const { classes, theme, info } = this.props;
+        const { classes, info } = this.props;
 
         if(this.state.toDetails) {
             return <Redirect to={"/user/deals/" + info.id }  />

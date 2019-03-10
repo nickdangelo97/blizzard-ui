@@ -64,7 +64,7 @@ const LoginPage = (props) => {
                 <CardContent className={classes.cardContent} style={{ pointerEvents: (isFetching || settingPass) ? 'none': 'all', opacity: (isFetching || settingPass) ? '0.4' : '1' }}>
                     <div className={classes.logoContainer}>
 
-                        <img src={Logo} className={classes.logo} />
+                        <img src={Logo} alt="Toronto Blizzard Logo" className={classes.logo} />
                         <Typography
                             className={classes.title}
                             align="center"

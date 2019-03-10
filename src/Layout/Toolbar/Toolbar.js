@@ -65,7 +65,7 @@ const logout = (event) => {
     <div className={classes.root}>
       <AppBar position="static" className={classes.appbar}>
         <div className={classes.logoContainer}>
-          <img src={Logo} className={classes.logo} />
+          <img src={Logo} alt="Toronto Blizzard Logo" className={classes.logo} />
         </div>
         <Toolbar disableGutters className={classes.toolbar}>
           <IconButton onClick={props.clicked} color="inherit" style={{ visibility: isAuth ? 'visible' : 'hidden', width: 25 }}>

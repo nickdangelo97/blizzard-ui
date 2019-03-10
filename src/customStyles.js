@@ -1,5 +1,3 @@
-import React from 'react'
-
 let data = {
     fullPage: {
         position: 'static',

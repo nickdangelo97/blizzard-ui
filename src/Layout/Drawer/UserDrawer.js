@@ -34,7 +34,7 @@ let list_items = (current) => {
   return [{ title: "Current Deals", path: "/user/deals" }, { title: "My Profile", path: "/user/profile" }].map((object, index) => (
     <Link to={object.path} style={{ textDecoration: 'none' }} key={object.title}>
       <ListItem selected={current === object.path} button >
-        <ListItemIcon> {index == 0 ? <MoneyIcon /> : <PersonIcon />} </ListItemIcon>
+        <ListItemIcon> {index === 0 ? <MoneyIcon /> : <PersonIcon />} </ListItemIcon>
         <ListItemText primary={object.title} />
       </ListItem>
     </Link>
