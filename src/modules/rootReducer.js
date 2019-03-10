@@ -3,6 +3,7 @@ import {
     LOGIN_SUCCESS,
     LOGOUT_USER,
     SET_ACTIVE,
+    DEALS_SET,
     SETTING_PASS,
     DATA_SET
 
@@ -13,6 +14,7 @@ const initalState = {
     isFetching: false,
     settingPass: false,
     user: null,
+    deals: [],
     message: ''
 }
 
@@ -30,6 +32,10 @@ function rootReducer(state = initalState, action) {
                 isFetching: action.isFetching,
                 user: action.user,
                 message: ''
+            })
+        case DEALS_SET:
+            return Object.assign({}, state, {
+                deals: action.deals
             })
         case DATA_SET:
             return Object.assign({}, state, {

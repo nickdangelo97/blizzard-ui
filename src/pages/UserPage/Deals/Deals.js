@@ -8,7 +8,7 @@ import axios from 'axios'
 
 import customStyles from "../../../customStyles";
 import DealItem from './DealItem/DealItem';
-import { logoutUser } from '../../../modules/actions'
+import { logoutUser, dealsSet } from '../../../modules/actions'
 import { getAccessString } from '../../../util/util';
 
 const styles = theme => ({
@@ -51,7 +51,8 @@ class Deals extends Component {
             }
         })
             .then(res => {
-                this.setState({ deals: res.data.dealsList, fetchingDeals: false })
+                this.props.dealsSet(res.data.dealsList)
+                this.setState({ fetchingDeals: false })
             })
             .catch(err => {
                 this.setState({ fetchingDeals: false })
@@ -111,11 +112,12 @@ class Deals extends Component {
 
                     {this.get_progress(this.state.fetchingDeals)}
 
-                    {this.get_list(this.state.deals, classes)}
+                    {this.get_list(this.props.deals, classes)}
                 </div>
             </div>
         )
     }
 }
 
-export default connect(null, dispatch => ({ logoutUser: payload => dispatch(logoutUser(payload)) }))(withStyles(styles)(Deals));
+export default connect(state => ({ deals: state.rootReducer.deals }), 
+    dispatch => ({ logoutUser: payload => dispatch(logoutUser(payload)), dealsSet: payload => dispatch(dealsSet(payload)) }))(withStyles(styles)(Deals));

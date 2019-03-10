@@ -3,6 +3,7 @@ import {
     LOGIN_SUCCESS,
     LOGOUT_USER,
     DATA_SET,
+    DEALS_SET,
     SET_ACTIVE,
     SETTING_PASS
 
@@ -42,6 +43,7 @@ const recLogin = user => (
     }
 )
 
+
 const setData = user => (
     {
         type: DATA_SET,
@@ -49,12 +51,22 @@ const setData = user => (
     }
 )
 
+
+const dealsSet = deals => (
+    {
+        type: DEALS_SET,
+        deals
+    }
+)
+
+
 const setActive = active => (
     {
         type: SET_ACTIVE,
         active
     }
 )
+
 
 const settingPass = setting => (
     {
@@ -73,7 +85,7 @@ const reqLogOut = message => (
     }
 )
 
-//dispatch as prop to dispatch multiple actions
+
 const loginUser = payload => (
     dispatch => {
         dispatch(reqLogin(payload))
@@ -101,6 +113,7 @@ const loginUser = payload => (
     }
 )
 
+
 const getData = payload => (
     dispatch => {
         axios.get("/getUser", {
@@ -110,6 +123,18 @@ const getData = payload => (
         })
         .then(res => {
             dispatch(setData(res.data.user))
+        })
+        .catch(error => {
+            dispatch(logoutUser(error.response ? error.response.data.message : error.message))
+        })
+
+        axios.get("/getDeals", {
+            headers: {
+                Authorization: getAccessString()
+            }
+        })
+        .then(res => {
+            dispatch(dealsSet(res.data.dealsList))
         })
         .catch(error => {
             dispatch(logoutUser(error.response ? error.response.data.message : error.message))
@@ -130,11 +155,14 @@ const logoutUser = payload => (
             })
     }
 )
+
+
 export {
     loginUser,
     setActive,
     getData,
     setData,
+    dealsSet,
     settingPass,
     logoutUser
 }

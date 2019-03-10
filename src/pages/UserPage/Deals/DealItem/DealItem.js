@@ -42,13 +42,7 @@ const styles = theme => ({
     },
     subText: {
         marginTop: 10,
-        [theme.breakpoints.up(557)]: {
-            fontSize: '1.2000em',
-        },
-        [theme.breakpoints.down(556)]: {
-            fontSize: '1.100em',
-        },
-
+        fontSize: '1.2000em',
     },
     listItem: {
         justifyContent: "center"
@@ -67,7 +61,7 @@ class DealItem extends Component {
 
     render() {
         const { classes, info } = this.props;
-
+        
         if(this.state.toDetails) {
             return <Redirect to={"/user/deals/" + info.id }  />
         }
