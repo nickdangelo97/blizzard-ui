@@ -9,7 +9,7 @@ import axios from 'axios'
 import customStyles from "../../../customStyles";
 import DealItem from './DealItem/DealItem';
 import { logoutUser, dealsSet } from '../../../modules/actions'
-import { getAccessString } from '../../../util/util';
+import { getAccessString, baseUrl } from '../../../util/util';
 
 const styles = theme => ({
     root: {
@@ -45,19 +45,29 @@ class Deals extends Component {
     componentDidMount() {
         this.setState({ fetchingDeals: true })
 
-        axios.get('/getDeals', {
+        const { dealsSet, logoutUser} = this.props
+        const that = this
+
+        fetch(baseUrl + '/getDeals', {
+            method: "get",
+            credentials: 'include',
             headers: {
-                Authorization: getAccessString()
+                'Authorization': getAccessString()
             }
         })
-            .then(res => {
-                this.props.dealsSet(res.data.dealsList)
-                this.setState({ fetchingDeals: false })
-            })
-            .catch(err => {
-                this.setState({ fetchingDeals: false })
-                this.props.logoutUser(err.response.data.message)
-            })
+        .then((response) => {
+            return response.json().then(function (data) {
+                if (!response.ok) {
+                    that.setState({ fetchingDeals: false })
+                    logoutUser(data.message)
+                    return
+                }
+
+                dealsSet(data.dealsList)
+                that.setState({ fetchingDeals: false })
+            });
+        })
+        .catch(error => logoutUser(error))
     }
 
     list_items = (items, clicked) => {
