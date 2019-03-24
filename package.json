@@ -8,6 +8,7 @@
     "axios": "^0.18.0",
     "connected-react-router": "^6.3.1",
     "fetch": "^1.1.0",
+    "fetch-intercept": "^2.3.1",
     "lodash": "^4.17.11",
     "query-string": "^6.4.0",
     "react": "^16.8.2",
@@ -29,7 +30,6 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "homepage": "https://NicholasDAngelo.github.io/blizzardcrm-host",
   "browserslist": [
     ">0.2%",
     "not dead",
