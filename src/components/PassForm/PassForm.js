@@ -9,6 +9,7 @@ import axios from 'axios'
 import PasswordComplexityCheck from './PasswordComplexityCheck/PasswordComplexityCheck';
 import { logoutUser, setActive, settingPass } from '../../modules/actions'
 import FormTextField from '../FormTextField/FormTextField';
+import { baseUrl } from '../../util/util';
 
 
 class PassForm extends Component {
@@ -52,7 +53,7 @@ class PassForm extends Component {
     
     this.props.settingPass(true)
     axios({
-      url: "/setPass",
+      url: baseUrl + "/setPass",
       method: "post",
       auth: {
         username: this.props.email,

@@ -11,6 +11,7 @@ import axios from 'axios'
 import PassForm from '../../components/PassForm/PassForm';
 import { setData } from '../../modules/actions';
 import customStyles from '../../customStyles';
+import { baseUrl } from '../../util/util';
 
 
 const styles = theme => ({
@@ -36,7 +37,7 @@ class ResetPassPage extends Component {
         const { token } = queryString.parse(this.props.location.search)
 
         if (token) {
-            axios.get("/getUser", {
+            axios.get(baseUrl + "/getUser", {
                 headers: {
                     Authorization: "Bearer " + token
                 }

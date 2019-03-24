@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 import axios from 'axios'
 import { settingPass } from '../../../modules/actions'
 import FormTextField from '../../../components/FormTextField/FormTextField';
+import { baseUrl } from '../../../util/util';
 
 
 
@@ -44,7 +45,7 @@ class ResetForm extends Component {
 
         this.props.settingPass(true)
 
-        axios.get("/sendResetLink", {
+        axios.get(baseUrl + "/sendResetLink", {
             auth: {
                 username: this.state.email,
                 password: ""
