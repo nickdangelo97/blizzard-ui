@@ -22,12 +22,8 @@ const styles = theme => ({
         marginTop: 10,
         marginLeft: 25,
         alignSelf: "flex-end",
-        [theme.breakpoints.up(557)]: {
-            fontSize: '1.000em',
-        },
-        [theme.breakpoints.down(556)]: {
-            fontSize: '0.875em',
-        },
+        whiteSpace: 'pre-wrap',
+        fontSize: '1.000em'
     },
 })
 
@@ -44,6 +40,18 @@ class DealDetails extends Component {
         const { classes, deals, match } = this.props
 
         const deal = deals[match.params.id - 1]
+        let details
+        let title
+
+        if(deal === undefined) {
+            details = "Loading..."
+            title = "Loading ..."
+        }
+        else {
+            details = deal.details
+            title = deal.title
+        }
+
 
         if(this.state.backClicked) {
           return <Redirect to="/user/deals" />      
@@ -56,11 +64,11 @@ class DealDetails extends Component {
                         <ArrowBackIos />
                     </IconButton>
 
-                    <Typography className={classes.headerText}>{_.isEmpty(deals) ? "Loading..." : deal.title}</Typography>
+                    <Typography className={classes.headerText}>{title}</Typography>
 
                     {/* <img src={Logo} style={{ maxWidth: 100 }} /> */}
                 </div>
-                <Typography className={classes.bodyText} variant="subtitle1">{ _.isEmpty(deals) ? "Loading..." : deal.details}</Typography>
+                <Typography className={classes.bodyText} variant="subtitle1">{details}</Typography>
             </div>
 
         );
