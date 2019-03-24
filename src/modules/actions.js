@@ -1,3 +1,7 @@
+import { push } from 'connected-react-router'
+import _ from "lodash"
+import fetchIntercept from 'fetch-intercept'
+
 import {
     LOGIN_REQUEST,
     LOGIN_SUCCESS,
@@ -8,21 +12,22 @@ import {
     SETTING_PASS
 
 } from './constants'
-import { push } from 'connected-react-router'
-import axios from 'axios'
-import _ from "lodash"
-import { getAccessString } from '../util/util';
+import { getAccessString, baseUrl } from '../util/util';
 
+fetchIntercept.register({
+    response: function (response) {
+        // Modify the reponse object
+        if(response.headers.get("X-Auth-Token"))
+            sessionStorage.setItem("token", response.headers.get("X-Auth-Token"))
 
-axios.interceptors.response.use((response) => {
-    if (_.get(response.headers, "x-auth-token"))
-        sessionStorage.setItem("token", _.get(response.headers, "x-auth-token"))
-        
-    return response
-},
-    ((error) => {
-        return Promise.reject(error)
-    }))
+        return response;
+    },
+
+    responseError: function (error) {
+        // Handle an fetch error
+        return Promise.reject(error);
+    }
+})
 
 
 const reqLogin = payload => (
@@ -90,54 +95,63 @@ const loginUser = payload => (
     dispatch => {
         dispatch(reqLogin(payload))
 
-        axios.defaults.withCredentials = true
-
-        return axios.get("/login", {
-            auth: {
-                username: payload.email,
-                password: payload.password
-            },
-            withCredentials: true,
+        return fetch(baseUrl + "/login", {
+            method: 'get',
+            credentials: 'include',
             headers: {
-                crossDomain: true
+                'Authorization': 'Basic ' + btoa(payload.email + ':' + payload.password),
             }
-
         })
             .then(response => {
-                dispatch(recLogin(response.data.user))
-                dispatch(push("/user/deals"))
+                return response.json().then(function (data) {
+                    if (!response.ok) {
+                        dispatch(logoutUser(data.message))
+                        return
+                    }
+
+                    dispatch(recLogin(data.user))
+                    dispatch(push("/user/deals"))
+                });
             })
-            .catch(error => {
-                dispatch(logoutUser(error.response ? error.response.data.message : error.message))
-            })
+            .catch(error => dispatch(logoutUser(error)))
     }
 )
 
 
 const getData = payload => (
     dispatch => {
-        axios.get("/getUser", {
+        fetch(baseUrl + '/getUser', {
+            method: "get",
+            credentials: 'include',
             headers: {
-                Authorization: getAccessString()
+                'Authorization': getAccessString()
             }
         })
-        .then(res => {
-            dispatch(setData(res.data.user))
-        })
-        .catch(error => {
-            dispatch(logoutUser(error.response ? error.response.data.message : error.message))
+        .then(response => {
+            return response.json().then(function (data) {
+                if (!response.ok) {
+                    dispatch(logoutUser(data.message))
+                    return
+                }
+                dispatch(setData(data.user))
+            });
         })
 
-        axios.get("/getDeals", {
+        fetch(baseUrl + '/getDeals', {
+            method: "get",
+            credentials: 'include',
             headers: {
-                Authorization: getAccessString()
+                'Authorization': getAccessString()
             }
         })
-        .then(res => {
-            dispatch(dealsSet(res.data.dealsList))
-        })
-        .catch(error => {
-            dispatch(logoutUser(error.response ? error.response.data.message : error.message))
+        .then(response => {
+            return response.json().then(function (data) {
+                if (!response.ok) {
+                    dispatch(logoutUser(data.message))
+                    return
+                }
+                dispatch(dealsSet(data.dealsList))
+            });
         })
     }
 )
@@ -146,13 +160,17 @@ const getData = payload => (
 const logoutUser = payload => (
     dispatch => {
         dispatch(reqLogOut(payload === undefined ? "Internal Server Error. Site access not avaliable." : payload))
-        return axios.get("/logoutUser")
-            .then(res => {
-                sessionStorage.removeItem("token")
-                dispatch(push("/login"))
-            })
-            .catch(err => {
-            })
+        return fetch(baseUrl + '/logoutUser', {
+            method: "get",
+            credentials: 'include',
+            headers: {
+                'Authorization': getAccessString()
+            }
+        })
+        .then(res => {
+            sessionStorage.removeItem("token")
+            dispatch(push("/login"))
+        })
     }
 )
 
